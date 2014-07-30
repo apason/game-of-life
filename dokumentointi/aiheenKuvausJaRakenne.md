@@ -15,12 +15,12 @@ valita kummalla tavalla maailma toimii.
 Käyttäjät: Ohjelmalla on vain yksi käyttäjä.
 
 Käyttäjän toiminnot:
-	*sääntöjen määrittely
-		*käyttäjä määrittää säännöt joilla solusta tulee elävä tai kuollut ja joillo solu pysyy elävänä tai kuolleena
-	*maailman koko
-		*käyttäjä määrittää minkä kokoisessa maailmassa simulaatio tapahtuu
-	*simulaation nopeus
-		*käyttäjä määrittää jokaisen simulaatioaskeleen ajallisen pituuden (esim 0.5 sekuntia tai 1 sekunti)
-	*simulaation aloitus
-	*simulaation lopetus
-	*mahdollisesti tietyn lopputuloksen tallentaminen ja lataaminen
+	* sääntöjen määrittely
+		* käyttäjä määrittää säännöt joilla solusta tulee elävä tai kuollut ja joillo solu pysyy elävänä tai kuolleena
+	* maailman koko
+		* käyttäjä määrittää minkä kokoisessa maailmassa simulaatio tapahtuu
+	* simulaation nopeus
+		* käyttäjä määrittää jokaisen simulaatioaskeleen ajallisen pituuden (esim 0.5 sekuntia tai 1 sekunti)
+	* simulaation aloitus
+	* simulaation lopetus
+	* mahdollisesti tietyn lopputuloksen tallentaminen ja lataaminen
