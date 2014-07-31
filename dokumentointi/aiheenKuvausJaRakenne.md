@@ -21,7 +21,7 @@ Käyttäjän toiminnot:
 --------------------
 
 * sääntöjen määrittely
- * käyttäjä määrittää säännöt joilla solusta tulee elävä tai kuollut ja joillo solu pysyy elävänä tai kuolleena
+ * käyttäjä määrittää säännöt joilla solusta tulee elävä tai kuollut ja jolloin solu pysyy elävänä tai kuolleena
 * maailman koko
  * käyttäjä määrittää minkä kokoisessa maailmassa simulaatio tapahtuu
 * simulaation nopeus
