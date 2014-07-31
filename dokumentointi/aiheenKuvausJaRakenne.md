@@ -1,4 +1,7 @@
-Aihe: Game of life. Toteutetaan ohjelma, joka simuloi satunnaista tai itse valittua halutun kokoista maailmaa.
+Aiheen kuvaus ja rakenne
+========================
+
+**Aihe**: Game of life. Toteutetaan ohjelma, joka simuloi satunnaista tai itse valittua halutun kokoista maailmaa.
 Maailman säännöt (esim game of lifen säännöt) voidaan määrittää ennen simulaation aloitusta. Simulaatiota
 voidaan suorittaa jatkuvasti tai eri pituisissa ajanjaksoissa esim 5 askelta kerrallaan. Myös simulaatiomaaliman
 koko ja simulaation piirtonopeus voidaan määritellä. Mahdollisesti voidaan ottaa vielä ottaa asetus, joka
@@ -12,9 +15,10 @@ Rajattu maailma olisi vastaavasti sellainen jolla "reunimmaisilla" soluilla olis
 päätetty. Mahdollisesti molemmat vaihtoehdot tulevat mukaan lopulliseen ohjelmaan, niin että käyttäjä saa
 valita kummalla tavalla maailma toimii.
 
-Käyttäjät: Ohjelmalla on vain yksi käyttäjä.
+**Käyttäjät**: Ohjelmalla on vain yksi käyttäjä.
 
 Käyttäjän toiminnot:
+--------------------
 
 * sääntöjen määrittely
  * käyttäjä määrittää säännöt joilla solusta tulee elävä tai kuollut ja joillo solu pysyy elävänä tai kuolleena
