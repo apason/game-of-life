@@ -11,5 +11,17 @@ package logic;
  * @author apa
  */
 public class Cell {
+    private Rules rules;
     
+    public Cell(Rules rules){
+        this.rules=rules;
+    }
+    
+    public Rules getRules(){
+        return this.rules;
+    }
+    
+    public void setRules(Rules rules){
+        this.rules=rules;
+    }
 }

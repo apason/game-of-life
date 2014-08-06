@@ -13,11 +13,16 @@ package logic;
 public class Rules {
     private final int born;
     private final int die;
-    //private final int priority;
+    private int priority;
     
     public Rules (int birth, int die){
         this.born=birth;
         this.die=die;
+        this.priority=0;
+    }
+    
+    public void setPriority(int priority){
+        this.priority=priority;
     }
     
     public int getBirth(){
@@ -28,4 +33,7 @@ public class Rules {
         return this.die;
     }
     
+    public int getPriority(){
+        return this.priority;
+    }
 }
