@@ -11,11 +11,16 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
+import logic.*;
+
 /**
  *
  * @author apa
  */
 public class CellTest {
+    
+    Rules rules;
+    Cell cell;
     
     public CellTest() {
     }
@@ -30,6 +35,8 @@ public class CellTest {
     
     @Before
     public void setUp() {
+        rules=new Rules(1,2);
+        cell=new Cell(rules);
     }
     
     @After
@@ -41,4 +48,16 @@ public class CellTest {
     //
     // @Test
     // public void hello() {}
+    
+    @Test
+    public void constructorWorksProperly(){
+        assertEquals(rules,cell.getRules());
+    }
+    
+    @Test
+    public void settersAndGettersWorksProperly(){
+        Rules rules2 = new Rules(0,5);
+        cell.setRules(rules2);
+        assertEquals(rules2,cell.getRules());
+    }
 }
