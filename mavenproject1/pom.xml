@@ -48,10 +48,10 @@
             <version>0.30</version>
             <configuration>
                 <targetClasses>
-                    <param>gameoflife.mavenproject1.*</param>
+                    <param>logic.*</param>
                 </targetClasses>
                 <targetTests>
-                        <param>gameoflife.mavenproject1.*</param>
+                        <param>*</param>
                 </targetTests>
             </configuration>
         </plugin>

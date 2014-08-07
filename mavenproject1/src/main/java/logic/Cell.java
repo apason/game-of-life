@@ -24,4 +24,8 @@ public class Cell {
     public void setRules(Rules rules){
         this.rules=rules;
     }
+    
+    public Cell copy(){
+        return new Cell(rules);
+    }
 }
