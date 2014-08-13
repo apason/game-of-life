@@ -49,6 +49,7 @@
             <configuration>
                 <targetClasses>
                     <param>logic.*</param>
+                    <param>interfaces.*</param>
                 </targetClasses>
                 <targetTests>
                         <param>*</param>

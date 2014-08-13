@@ -10,6 +10,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import java.util.ArrayList;
 
 import logic.*;
 
@@ -20,6 +21,8 @@ import logic.*;
 public class RulesTest {
     
     Rules rules;
+    ArrayList<Integer> birth;
+    ArrayList<Integer> die;
     
     public RulesTest() {
     }
@@ -34,7 +37,16 @@ public class RulesTest {
     
     @Before
     public void setUp() {
-        rules = new Rules(3,6);
+        birth = new ArrayList<Integer>();
+        die = new ArrayList<Integer>();
+        birth.add(3);
+        die.add(1);
+        die.add(4);
+        die.add(5);
+        die.add(6);
+        die.add(7);
+        die.add(8);
+        rules = new Rules(birth,die,1);
     }
     
     @After
@@ -48,13 +60,12 @@ public class RulesTest {
     // public void hello() {}
     @Test
     public void constructorWorksProperly(){
-        assertEquals(3,rules.getBirth());
-        assertEquals(6,rules.getDie());
+        assertEquals(birth,rules.getBirth());
+        assertEquals(die,rules.getDie());
     }
     
     @Test
-    public void prioritySetAndGetWorksProperly(){
-        rules.setPriority(0);
-        assertEquals(0,rules.getPriority());
+    public void priorityGetterWorksProperly(){
+        assertEquals(1,rules.getPriority());
     }
 }
