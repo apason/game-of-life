@@ -69,3 +69,4 @@ public class RulesTest {
         assertEquals(1,rules.getPriority());
     }
 }
+

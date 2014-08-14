@@ -79,3 +79,5 @@ public class CellTest {
         assertEquals(rules,cell.copy().getRules());
     }
 }
+
+

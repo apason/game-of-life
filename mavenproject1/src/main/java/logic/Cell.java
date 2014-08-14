@@ -29,3 +29,4 @@ public class Cell {
         return new Cell(rules);
     }
 }
+
