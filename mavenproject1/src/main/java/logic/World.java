@@ -67,7 +67,6 @@ public class World {
     //synnyttää solun JOS säännöt edellyttävät
     public void giveBirth(int y, int x, Cell[][] generation2){
         ArrayList<Integer> prioritys = getPrioritys(y,x);
-        //int biggestpriority=getBiggestPriority(y,x);
         int nearbys=countNearbys(y,x);
         
         //olettaen että rules on järjestetty laskevan prioriteetin mukaan

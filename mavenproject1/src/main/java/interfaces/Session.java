@@ -10,6 +10,7 @@ package interfaces;
  *
  * @author apa
  */
+
 import java.util.ArrayList;
 import logic.*;
 //sisältää ne tiedot mitä tarvitaan tallennukseen
@@ -49,14 +50,13 @@ public class Session {
     public void createWorld(int size){
         //tutki että rules on ok
         world=new World(size, rules);
+        world.initializeMap();
         map=world.getMap();
     }
     
     
     public void addRule(Rules rule) throws Exception {
-        //jos ei samaa prioriteettia niin lisää
-        //muuten throw exception?
-        
+
         for(int i : rule.getBirth())
             if(rule.getDie().contains(i))
                 throw(new RuntimeException("conflicts in death and birth conditions"));

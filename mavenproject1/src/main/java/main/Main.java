@@ -7,6 +7,7 @@ package main;
 
 import java.util.ArrayList;
 import logic.*;
+import interfaces.*;
 
 /**
  *
@@ -15,12 +16,10 @@ import logic.*;
 public class Main {
 
     public static void main(String[] args) {
-        ArrayList<Rules> rules;
-        World world1;
-        Rules rules1;
+        Session session = new Session();
+        Rules rule1;
 
-        rules = new ArrayList<Rules>();
-        int[] r1d = {1, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30};
+        int[] r1d = {1, 4, 5, 6, 7, 8};
         ArrayList<Integer> r1dl = new ArrayList<Integer>();
         ArrayList<Integer> r1bl = new ArrayList<Integer>();
         r1bl.add(3);
@@ -29,21 +28,28 @@ public class Main {
             r1dl.add(i);
         }
 
-        rules1 = new Rules(r1bl, r1dl, 1);
+        rule1 = new Rules(r1bl, r1dl, 1);
 
-        rules.add(rules1);
-
-        world1 = new World(2, rules);
-
-        world1.initializeMap();
-
-        world1.getMap()[0][0].setRules(rules1);
-        world1.getMap()[1][0].setRules(rules1);
-        world1.getMap()[1][1].setRules(rules1);
+        try{
+            session.addRule(rule1);
+        } catch (Exception e){
+            System.out.println(e.toString());
+            return;
+        }
         
-        world1.printWorld();
+        session.createWorld(3);
         
-        System.out.println(""+world1.getPrioritys(0, 0).size());
+        session.getWorld().getMap()[0][1].setRules(rule1);
+        session.getWorld().getMap()[1][1].setRules(rule1);
+        session.getWorld().getMap()[2][1].setRules(rule1);
+        
+        for(int i=0;i<5;i++){
+            session.getWorld().printWorld();
+            System.out.println("");
+            session.getWorld().evolve();
+        }
+        
+        
     }
 
 }

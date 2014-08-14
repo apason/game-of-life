@@ -7,4 +7,5 @@ TUNTIKIRJANPITO
 * 7.8 n. 120min lähinnä testien tekemistä, n. 30min pitin configurointi ja raportin luonti
 * 10.8 n. 45min refaktorointia ja koodausta
 * 11.8 n. 90min koodausta ja suunnittelua
-* 12.8 n. 60min koodia, n.180min testejä ja debuggausta 
+* 12.8 n. 60min koodia, n.180min testejä ja debuggausta, n. 30 min luokkakaavio ja pit raportti
+* 13.8 n. 30min debuggausta
