@@ -49,7 +49,15 @@ public class Main {
             session.getWorld().evolve();
         }
         
+        session.save("jalla");
+        session.setWorld(null);
+        session.load("jalla");
         
+        for(int i=0;i<5;i++){
+            session.getWorld().printWorld();
+            System.out.println("");
+            session.getWorld().evolve();
+        }
     }
 
 }

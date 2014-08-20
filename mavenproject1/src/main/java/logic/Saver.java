@@ -1,15 +1,12 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package logic;
 
 /**
- *
+ * Mahdollistaa pelin tilan tallentamisen tiedostoon
  * @author apa
  */
+
+import java.io.FileOutputStream;
+import java.io.ObjectOutputStream;
 
 import interfaces.*;
 
@@ -17,12 +14,26 @@ public class Saver {
     private String filename;
     private Session session;
     
+    
+    /**
+     * @param filename tiedosto johon Session tallennetaan
+     * @param session tallennettava Session
+     */
     public Saver (String filename, Session session){
         this.filename=filename;
         this.session=session;
     }
-    public void save(){
-        
+    
+    /**
+     * Tallentaa konstruktorissa määriteltyyn tiedostoon konstruktorissa määritellyn session
+     * 
+     * @throws Exception 
+     */
+    public void save() throws Exception{
+        FileOutputStream out = new FileOutputStream(filename);
+        ObjectOutputStream data = new ObjectOutputStream(out);
+        data.writeObject(session);
+        data.close();
     }
 }
 

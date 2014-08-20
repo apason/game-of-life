@@ -1,24 +1,24 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package logic;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
+import java.io.Serializable;
 
 /**
- *
+ * Sisältää solutaulukon ja tiedot solujen tyypeistä sekä solutaulukkoon ja sen kehitykseen liittyvät metodit
  * @author apa
  */
 
-public class World {
+public class World implements Serializable {
     private Cell[][] map;
     private ArrayList<Rules> rules;
     
+    /**
+     * 
+     * @param size Määrittää Worldin sisältävän solutaulukon koon
+     * @param rules Sisältää kaikki mahdolliset Worlissa olevien solujen tyypiy (Rules:t)
+     */
     public World(int size,ArrayList<Rules> rules){
         this.map=new Cell[size][size];
         this.rules=rules;
@@ -36,6 +36,10 @@ public class World {
         return this.rules;
     }
     
+    /**
+     * Palauttaa kopion Worldin Cell taulukosta
+     * @return samantilainen Cell taulukko kuin ko. Worldilla
+     */
     public Cell[][] cloneMap(){
         Cell[][] clone = new Cell[this.map.length][this.map.length];
         for(int i=0;i<map.length;i++)
@@ -44,6 +48,11 @@ public class World {
         return clone;
     }
     
+    /**
+     * Ohjelman kannalta oleellisin metodi.
+     * Suurin osa ohjelman suorituksesta vietetään tässä metodissa.
+     * Hoitaa solukartan päivitystä.
+     */
     public void evolve(){
         Cell[][] tmp = cloneMap();
         
@@ -56,15 +65,25 @@ public class World {
         
         map=tmp;
     }
-    
-    //tappaa solun JOS säännöt edellyttävät
+
+    /**
+     * Tappaa solun jos säännöt edellyttävät
+     * @param y solukartan pystykoordinaatti
+     * @param x solukartan vaakakoordinaatti
+     * @param generation2 Cell[][] taulukkoa vastaava seuraava sukupolvi (laskuvaiheessa)
+     */
     public void eliminate(int y, int x, Cell[][] generation2){
         int nearbys=countNearbys(y,x);
         if(map[y][x].getRules()!=null && map[y][x].getRules().getDie().contains(nearbys))
             generation2[y][x].setRules(null);
     }
     
-    //synnyttää solun JOS säännöt edellyttävät
+    /**
+     * Synnyttää solun jos säännöt edellyttävät
+     * @param y solun pystykoordinaatti
+     * @param x solun vaakakoordinaatti
+     * @param generation2 Cell[][] taulukkoa vastaava seuraava sukupolvi (laskuvaiheessa)
+     */
     public void giveBirth(int y, int x, Cell[][] generation2){
         ArrayList<Integer> prioritys = getPrioritys(y,x);
         int nearbys=countNearbys(y,x);
@@ -78,6 +97,12 @@ public class World {
         }
     }
         
+    /**
+     * Laskee parametreina annetun solun naapurisolujen prioriteettien summan
+     * @param i solun pystykoordinaatti
+     * @param j solun vaakakoordinaatti
+     * @return naapurisolujen prioriteettien summa
+     */
     public int countNearbys(int i, int j){
         int nearbys=0;
         for(int y=i-1;y<=i+1;y++)
@@ -89,6 +114,12 @@ public class World {
         return nearbys;
     }
     
+    /**
+     * Ylöskirjaa kaikkien naapurisolujen prioriteetit
+     * @param i solun pystykoordinaatti
+     * @param j solun vaakakoordinaatti
+     * @return  kaikkien naapurisolujen prioriteetit
+     */
     public ArrayList<Integer> getPrioritys(int i, int j){
         ArrayList<Integer> prioritys = new ArrayList<Integer>();
         for(int y=i-1;y<=i+1;y++)
@@ -114,6 +145,9 @@ public class World {
 //        return biggest;
 //    }
     
+    /**
+     * Tulostaa maailman.
+     */
     public void printWorld(){
         for(int i=0;i<map.length;i++){
             for(int j=0;j<map.length;j++){
@@ -126,12 +160,18 @@ public class World {
         }
     }
     
+    /**
+     * Alustaa maailman: luo solut ja merkitsee jokaisen solun kuolleeksi (Rules = null)
+     */
     public void initializeMap(){
         for(int i=0;i<map.length;i++)
             for(int j=0;j<map.length;j++)
                 map[i][j]=new Cell(null);
     }
     
+    /**
+     * Arpoo jokaiselle solulle jonkun rules listalla olevan tyypin tai arvon null.
+     */
     public void randomizeMap(){
         Random random = new Random();
         for(int i=0;i<map.length;i++)

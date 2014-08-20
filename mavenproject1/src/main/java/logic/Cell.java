@@ -1,16 +1,13 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package logic;
 
+import java.io.Serializable;
+
 /**
- *
+ * Esittää yhtä maailman solua (maailma koostuu soluista) 
+ * @see logic.World
  * @author apa
  */
-public class Cell {
+public class Cell implements Serializable {
     private Rules rules;
     
     public Cell(Rules rules){
@@ -25,6 +22,10 @@ public class Cell {
         this.rules=rules;
     }
     
+    /**
+     * Palauttaa itseään vastaavan (samantilaisen olion)
+     * @return samantilainen olio
+     */
     public Cell copy(){
         return new Cell(rules);
     }
