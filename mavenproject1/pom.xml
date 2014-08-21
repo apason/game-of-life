@@ -48,10 +48,8 @@
             <version>0.30</version>
             <configuration>
                 <targetClasses>
-                    <param>logic.World</param>
-                    <param>logic.Cell</param>
-                    <param>logic.Rules</param>
-                    <param>interfaces.*</param>
+                    <param>logic.*</param>
+                    <param>interfaces.session</param>
                 </targetClasses>
                 <targetTests>
                         <param>*</param>

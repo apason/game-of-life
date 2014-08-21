@@ -30,6 +30,7 @@ public class Saver {
      * @throws Exception 
      */
     public void save() throws Exception{
+        
         FileOutputStream out = new FileOutputStream(filename);
         ObjectOutputStream data = new ObjectOutputStream(out);
         data.writeObject(session);

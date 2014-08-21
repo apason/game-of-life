@@ -162,5 +162,28 @@ public class Session implements Serializable {
         }
 
     }
-
+    
+    /**
+     * Vain testejä varten. Ei voi vertailla kahta mielivaltaista Session oliota!
+     * @param o mihin verrataan
+     * @return true jos kyseessä sama olio, muuten false
+     */
+    @Override
+    public boolean equals(Object o){
+        Session s;
+        if(o == null)
+            return false;
+        if(o.getClass()!=this.getClass())
+            return false;
+        s=(Session) o;
+        if ((s.getWorld()==null && this.getWorld()!=null) || (s.getRules() == null && this.getRules()!=null))
+            return false;
+        if((s.getRunning()!=this.getRunning())|| (s.getRules()==null&&this.getRules()!=null))
+            return false;
+        if(this.getRules()!=null)
+            if(this.getRules().size()!= s.getRules().size())
+                return false;
+        return true;
+        
+    }
 }

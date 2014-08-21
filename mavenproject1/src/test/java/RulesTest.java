@@ -68,5 +68,13 @@ public class RulesTest {
     public void priorityGetterWorksProperly(){
         assertEquals(1,rules.getPriority());
     }
+    
+    @Test
+    public void compareToWorksProperly(){
+        Rules rules2 = new Rules(null,null,2);
+        Rules rules3 = new Rules(null,null,1);
+        assertTrue(rules.compareTo(rules2)<0);
+        assertTrue(rules.compareTo(rules3)==0);
+    }
 }
 
