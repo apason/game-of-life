@@ -11,6 +11,11 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import logic.*;
 
+/**
+ * Luokka sisältää kaiken tallennukseen/lataamisen tarvittavan datan ja
+ * toimii osana käyttöliittymää
+ * @author apa
+ */
 public class Session implements Serializable {
 
     private boolean running;

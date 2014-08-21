@@ -1,15 +1,15 @@
 package logic;
 
-/**
- * Mahdollistaa pelin tilan tallentamisen tiedostoon
- * @author apa
- */
 
 import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
 
 import interfaces.*;
 
+/**
+ * Simulaation tallennuksen mahdollistava luokka.
+ * @author apa
+ */
 public class Saver {
     private String filename;
     private Session session;

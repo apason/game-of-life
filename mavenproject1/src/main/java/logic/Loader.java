@@ -3,18 +3,17 @@ package logic;
 import java.io.FileInputStream;
 import java.io.ObjectInputStream;
 
+import interfaces.*;
+
 /**
  * Mahdollistaa aiemmin pelatun pelin tilan lataamisen tiedostosta
  * @author apa
  */
-
-import interfaces.*;
-
 public class Loader {
     private String filename;
     
     /**
-     * 
+     * Konstruktori
      * @param filename tiedosto josta Session luetaan
      */
     public Loader (String filename){
