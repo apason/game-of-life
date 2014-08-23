@@ -17,6 +17,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import logic.Rules;
+import logic.Utilities;
 
 /**
  *
@@ -38,6 +39,16 @@ public class AddRule implements ActionListener{
     
     @Override
     public void actionPerformed(ActionEvent ae) {
+        
+        if(!Utilities.correctConditionList(bc.getText())){
+            bc.setText("Syntax error: list conditions (integers) separated with comma.");
+            return;
+        }
+        if(!Utilities.correctConditionList(dc.getText())){
+            dc.setText("Syntax error: list conditions (integers) separated with comma.");
+            return;
+        }
+        
         ArrayList<Integer> bl = new ArrayList<Integer>();
         ArrayList<Integer> dl = new ArrayList<Integer>();
         Rules rule;

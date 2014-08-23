@@ -28,6 +28,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 import logic.Rules;
+import logic.Utilities;
 
 /**
  *
@@ -36,6 +37,7 @@ import logic.Rules;
 public class GUI implements Runnable {
 
     private Session session;
+    private String filename;
 
     private JFrame frame;
     //framen itemit
@@ -122,6 +124,19 @@ public class GUI implements Runnable {
                 openActionPerformed(evt);
             }
         });
+        
+        save.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveActionPerformed(evt);
+            }
+        });
+        
+        saveas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveasActionPerformed(evt);
+            }
+        });
+        
         exit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 exitActionPerformed(evt);
@@ -207,14 +222,36 @@ public class GUI implements Runnable {
     }
 
     private void openActionPerformed(ActionEvent evt){
+        filechooser.setDialogTitle("Open");
         int returnVal = filechooser.showOpenDialog(frame);
         if (returnVal == javax.swing.JFileChooser.APPROVE_OPTION){
             File file = filechooser.getSelectedFile();
-            session.load(file.getName());
+            session.load(Utilities.correctFilename(file.getName()));
+            filename=Utilities.correctFilename(file.getName());
         }
         else
-            System.out.println("error");
+            System.out.println("error: unable to load file\n" + evt.getActionCommand());
     }
+    
+    private void saveActionPerformed(ActionEvent evt){
+        if(filename!=null)
+            session.save(Utilities.correctFilename(filename));
+        else
+            saveasActionPerformed(evt);
+    }
+    
+    private void saveasActionPerformed(ActionEvent evt){
+        filechooser.setDialogTitle("Save As ");
+        filechooser.setApproveButtonText("Save");
+        int returnVal = filechooser.showOpenDialog(frame);
+        if (returnVal == javax.swing.JFileChooser.APPROVE_OPTION){
+            File file = filechooser.getSelectedFile();
+            session.save(Utilities.correctFilename(file.getName()));
+        }
+        else
+            System.out.println("error: unabe to save file\n" + evt.getActionCommand());
+    }
+    
     private void exitActionPerformed(ActionEvent evt){
         System.exit(0);
     }
@@ -228,6 +265,4 @@ public class GUI implements Runnable {
         optionswindow.setVisible(true);
         
     }
-    
-    
 }

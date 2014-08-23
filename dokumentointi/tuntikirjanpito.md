@@ -12,4 +12,5 @@ TUNTIKIRJANPITO
 * 17.8 n. 3h koodikatselmointia
 * 19.8 n. 40 min loaderin ja saverin koodausta, n.60 min javadoc
 * 20.8 n. 9.5h swing PRKL!
-* 21.8 n. 2h sekvenssi- ja luokkakaaviota + kertausta sekvenssikaavioista
+* 21.8 n. 2h sekvenssi- ja luokkakaaviota + kertausta sekvenssikaavioista, n. 30 min guita
+* 22.8 n. 45min Utilities luokka ja vähän swingiä
