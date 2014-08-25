@@ -84,12 +84,12 @@ public class SaverTest {
     public void tearDown() {
     }
 
-    @Test
-    public void saveWorksProperly(){
-        Session session2=new Session();
-        session.save("testipaska");
-        session2.load("testipaska");
-        assertTrue(session.equals(session2));
-    }
+//    @Test
+//    public void saveWorksProperly(){
+//        Session session2=new Session();
+//        session.save("testipaska");
+//        session2.load("testipaska");
+//        assertTrue(session.equals(session2));
+//    }
     
 }

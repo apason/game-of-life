@@ -52,9 +52,9 @@ public class Main {
 //            session.getWorld().evolve();
 //        }
 //        
-//        session.save("jalla");
+//        session.save("jalla.dat");
 //        session.setWorld(null);
-//        session.load("jalla");
+//        session.load("jalla.dat");
 //        
 //        for(int i=0;i<5;i++){
 //            session.getWorld().printWorld();

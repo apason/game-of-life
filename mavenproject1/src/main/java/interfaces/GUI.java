@@ -6,6 +6,10 @@
 package interfaces;
 
 import actionlisteners.AddRule;
+import actionlisteners.EditActionListener;
+import actionlisteners.GeneralSaveActionListener;
+import actionlisteners.RemoveActionListener;
+import actionlisteners.WindowCloseActionListener;
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dimension;
@@ -38,6 +42,8 @@ public class GUI implements Runnable {
 
     private Session session;
     private String filename;
+    private int iterationsperstep;
+    private int timeperstep;
 
     private JFrame frame;
     //framen itemit
@@ -63,6 +69,8 @@ public class GUI implements Runnable {
 
     public GUI() {
         session = new Session();
+        iterationsperstep=1;
+        timeperstep=350;
     }
 
     @Override
@@ -92,7 +100,7 @@ public class GUI implements Runnable {
         //edit menun itemit
         options = new JMenuItem("Options");
         //panelin itemit
-        if(session.getWorld()!=null && session.getWorld().getMap()!=null){
+        if(session.getWorld()!=null){
             int size = session.getWorld().getMap().length;
             int priority;
             table = new JButton[size][size];
@@ -165,19 +173,38 @@ public class GUI implements Runnable {
     }
     
     private void createOptionsComponents(Container container){
+        //options
         JTabbedPane optionspane = new JTabbedPane();
+        //välilehdet
         JPanel rulestab = new JPanel();
+        JPanel generaltab = new JPanel();
+        //rulestabin itemit
         JPanel ruleslisteditremove = new JPanel();
         JPanel rulesadd = new JPanel();
+        //rulesaddin itemit
         JLabel rulesaddtitle = new JLabel();
         JTextField bl = new JTextField();
         JTextField dl = new JTextField();
         JTextField priority = new JTextField();
         JButton add = new JButton();
+        //ruleslisteditremoven itemit
         ButtonGroup rulesgroup = new ButtonGroup();
         JButton edit = new JButton();
         JButton remove = new JButton();
+        JButton rulesok = new JButton();
+        //generaltabin itemit
+        JPanel generaloptions = new JPanel();
+        //generaloptionsin itemit
+        JLabel sizetitle = new JLabel();
+        JTextField size = new JTextField();
+        JLabel steptimetitle = new JLabel();
+        JTextField steptime = new JTextField();
+        JLabel iterationstitle = new JLabel();
+        JTextField iterations = new JTextField();
+        JButton generalsave = new JButton();
+        JButton generalok = new JButton();
         
+        //rulestab
         rulesaddtitle.setText("Add/modify rules here:");
         dl.setText("Dead conditions (separate with comma)");
         bl.setText("Birth conditions (separate with comma)");
@@ -185,21 +212,21 @@ public class GUI implements Runnable {
         add.setText("Add");
         edit.setText("Edit");
         remove.setText("Remove");
+        rulesok.setText("Ok");
         
+        //generaltab
+        sizetitle.setText("Edge size:");
+        if(session.getWorld()!=null)
+            size.setText(session.getWorld().getMap().length + "");
+        else
+            size.setText("0");
         
-        
-        rulestab.setLayout(new BorderLayout());
-        rulesadd.setLayout(new BoxLayout(rulesadd,BoxLayout.Y_AXIS));
-        ruleslisteditremove.setLayout(new BoxLayout(ruleslisteditremove, BoxLayout.Y_AXIS));
-        
-        
-        add.addActionListener(new AddRule(session,dl,bl,priority));
-
-        rulesadd.add(rulesaddtitle);
-        rulesadd.add(bl);
-        rulesadd.add(dl);
-        rulesadd.add(priority);
-        rulesadd.add(add);
+        steptimetitle.setText("Time per step (ms):");
+        steptime.setText(timeperstep+"");
+        iterationstitle.setText("Iterations per step:");
+        iterations.setText(iterationsperstep+"");
+        generalsave.setText("Save");
+        generalok.setText("Ok");
         
         if(session!=null && session.getWorld()!=null && session.getWorld().getRules()!=null){
             ArrayList<Rules> rules = session.getWorld().getRules();
@@ -211,15 +238,52 @@ public class GUI implements Runnable {
             }
         }
         
+        rulestab.setLayout(new BorderLayout());
+        rulesadd.setLayout(new BoxLayout(rulesadd,BoxLayout.Y_AXIS));
+        ruleslisteditremove.setLayout(new BoxLayout(ruleslisteditremove, BoxLayout.Y_AXIS));
+        
+        //actionlistenerit
+        add.addActionListener(new AddRule(session,dl,bl,priority));
+        edit.addActionListener(new EditActionListener(rulesgroup.getSelection(), dl,bl,priority, session.getRules()));
+        remove.addActionListener(new RemoveActionListener(rulesgroup.getSelection(), session.getRules()));
+        rulesok.addActionListener(new WindowCloseActionListener(optionswindow));
+        generalsave.addActionListener(new GeneralSaveActionListener(this,size,steptime,iterations));
+        generalok.addActionListener(new WindowCloseActionListener(optionswindow));
+        
+        //pakataan komponentit toistensa sisään
+        
+        rulesadd.add(rulesaddtitle);
+        rulesadd.add(bl);
+        rulesadd.add(dl);
+        rulesadd.add(priority);
+        rulesadd.add(add);
+        
         ruleslisteditremove.add(edit);
         ruleslisteditremove.add(remove);
         
+        generaltab.setLayout(new BoxLayout(generaltab, BoxLayout.Y_AXIS));
+        generaltab.add(sizetitle);
+        generaltab.add(size);
+        generaltab.add(steptimetitle);
+        generaltab.add(steptime);
+        generaltab.add(iterationstitle);
+        generaltab.add(iterations);
+        generaltab.add(generalsave);
+        generaltab.add(generalok);
+        
         rulestab.add(rulesadd);
         rulestab.add(ruleslisteditremove, BorderLayout.EAST);
+        rulestab.add(rulesok, BorderLayout.SOUTH);
+        
+        generaltab.add(generaloptions);
         
         optionspane.addTab("Rules", rulestab);
+        optionspane.addTab("General", generaltab);
         container.add(optionspane);
     }
+    
+    
+    //tapahtumien käsittely
 
     private void openActionPerformed(ActionEvent evt){
         filechooser.setDialogTitle("Open");
@@ -264,5 +328,14 @@ public class GUI implements Runnable {
         optionswindow.pack();
         optionswindow.setVisible(true);
         
+    }
+    public void setTimePerStep(int timeperstep){
+        this.timeperstep=timeperstep;
+    }
+    public void setIterationsPerStep(int iterationsperstep){
+        this.iterationsperstep=iterationsperstep;
+    }
+    public Session getSession(){
+        return session;
     }
 }

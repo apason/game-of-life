@@ -9,6 +9,7 @@ package interfaces;
 import java.io.Serializable;
 
 import java.util.ArrayList;
+import java.util.Objects;
 import logic.*;
 
 /**
@@ -20,7 +21,7 @@ public class Session implements Serializable {
 
     private boolean running;
     private World world;
-    private ArrayList<Integer> prioritys;
+    //private ArrayList<Integer> prioritys;
     private Cell[][] map; //tarviiko tätä?
     private ArrayList<Rules> rules;
 
@@ -29,7 +30,7 @@ public class Session implements Serializable {
      */
     public Session() {
         running = false;
-        prioritys = new ArrayList<Integer>();
+        //prioritys = new ArrayList<Integer>();
         rules = new ArrayList<Rules>();
 
         //world cell taulukon alustus, arraylistien alustus, worldin alustus
@@ -43,9 +44,9 @@ public class Session implements Serializable {
         return world;
     }
 
-    public ArrayList<Integer> getPrioritys() {
-        return prioritys;
-    }
+//    public ArrayList<Integer> getPrioritys() {
+//        return prioritys;
+//    }
 
     public ArrayList<Rules> getRules() {
         return rules;
@@ -64,7 +65,7 @@ public class Session implements Serializable {
         //tutki että rules on ok
         world = new World(size, rules);
         world.initializeMap();
-        map = world.getMap();
+        //map = world.getMap();
     }
 
     /**
@@ -156,8 +157,8 @@ public class Session implements Serializable {
         Session loaded;
         try {
             loaded = loader.load();
-            this.map = loaded.map;
-            this.prioritys = loaded.prioritys;
+            //this.map = loaded.map;
+            //this.prioritys = loaded.prioritys;
             this.rules = loaded.rules;
             this.running = loaded.running;
             this.world = loaded.world;
@@ -173,22 +174,32 @@ public class Session implements Serializable {
      * @param o mihin verrataan
      * @return true jos kyseessä sama olio, muuten false
      */
-    @Override
-    public boolean equals(Object o){
-        Session s;
-        if(o == null)
-            return false;
-        if(o.getClass()!=this.getClass())
-            return false;
-        s=(Session) o;
-        if ((s.getWorld()==null && this.getWorld()!=null) || (s.getRules() == null && this.getRules()!=null))
-            return false;
-        if((s.getRunning()!=this.getRunning())|| (s.getRules()==null&&this.getRules()!=null))
-            return false;
-        if(this.getRules()!=null)
-            if(this.getRules().size()!= s.getRules().size())
-                return false;
-        return true;
-        
-    }
+//    @Override
+//    public boolean equals(Object o){
+//        Session s;
+//        if(o == null)
+//            return false;
+//        if(o.getClass()!=this.getClass())
+//            return false;
+//        s=(Session) o;
+//        if ((s.getWorld()==null && this.getWorld()!=null) || (s.getRules() == null && this.getRules()!=null))
+//            return false;
+//        if((s.getRunning()!=this.getRunning())|| (s.getRules()==null&&this.getRules()!=null))
+//            return false;
+//        if(this.getRules()!=null)
+//            if(this.getRules().size()!= s.getRules().size())
+//                return false;
+//        return true;
+//        
+//    }
+//
+//    @Override
+//    public int hashCode() {
+//        int hash = 5;
+//        hash = 37 * hash + (this.running ? 1 : 0);
+//        hash = 37 * hash + this.rules.size();
+//        hash = 37 * hash + this.world.getMap().length;
+//        return hash;
+//    }
+    
 }

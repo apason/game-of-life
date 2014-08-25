@@ -19,6 +19,8 @@ import javax.swing.JTextField;
 import logic.Rules;
 import logic.Utilities;
 
+import actionlisteners.WindowCloseActionListener;
+
 /**
  *
  * @author apa
@@ -55,7 +57,7 @@ public class AddRule implements ActionListener{
         int prior = Integer.parseInt(priority.getText());
         String[] tmp = bc.getText().split(",");
         for(String s : tmp)
-            dl.add(Integer.parseInt(s));
+            bl.add(Integer.parseInt(s));
         tmp = dc.getText().split(",");
         for(String s : tmp)
             dl.add(Integer.parseInt(s));
@@ -69,11 +71,10 @@ public class AddRule implements ActionListener{
             JFrame frame = new JFrame("Error");
             JLabel label = new JLabel();
             JButton button = new JButton();
-            //frame.setPreferredSize(new Dimension(40, 20));
             label.setText("Unable to add rule:\n" + e.toString());
             button.setText("Ok");
             
-            button.addActionListener(new ButtonActionListener(frame));
+            button.addActionListener(new WindowCloseActionListener(frame));
             
             frame.getContentPane().add(label, BorderLayout.NORTH);
             frame.getContentPane().add(button);
@@ -84,16 +85,3 @@ public class AddRule implements ActionListener{
     }  
 }
 
-class ButtonActionListener implements ActionListener {
-
-    private JFrame frame;
-    
-    public ButtonActionListener(JFrame frame){
-        this.frame=frame;
-    }
-    @Override
-    public void actionPerformed(ActionEvent ae) {
-        frame.setVisible(false);
-    }
-    
-}
