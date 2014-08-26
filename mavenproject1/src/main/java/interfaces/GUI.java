@@ -8,7 +8,6 @@ package interfaces;
 import actionlisteners.AddRule;
 import actionlisteners.EditActionListener;
 import actionlisteners.GeneralSaveActionListener;
-import actionlisteners.RemoveActionListener;
 import actionlisteners.WindowCloseActionListener;
 import java.awt.BorderLayout;
 import java.awt.Container;
@@ -83,6 +82,7 @@ public class GUI implements Runnable {
         
         frame.pack();
         frame.setVisible(true);
+        
     }
 
     private void createComponents(Container container) {
@@ -124,6 +124,8 @@ public class GUI implements Runnable {
         //muut itemit
         filechooser = new JFileChooser();
         optionswindow = new JFrame("Options");
+        
+        optionswindow.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         
 
         //actionlistenerien määritys
@@ -244,8 +246,8 @@ public class GUI implements Runnable {
         
         //actionlistenerit
         add.addActionListener(new AddRule(session,dl,bl,priority));
-        edit.addActionListener(new EditActionListener(rulesgroup.getSelection(), dl,bl,priority, session.getRules()));
-        remove.addActionListener(new RemoveActionListener(rulesgroup.getSelection(), session.getRules()));
+        edit.addActionListener(new EditActionListener(rulesgroup, dl,bl,priority, session.getRules(), 1));
+        remove.addActionListener(new EditActionListener(rulesgroup, dl,bl,priority, session.getRules(), 0));
         rulesok.addActionListener(new WindowCloseActionListener(optionswindow));
         generalsave.addActionListener(new GeneralSaveActionListener(this,size,steptime,iterations));
         generalok.addActionListener(new WindowCloseActionListener(optionswindow));
