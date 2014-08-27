@@ -8,6 +8,7 @@ package interfaces;
 import actionlisteners.AddRule;
 import actionlisteners.EditActionListener;
 import actionlisteners.GeneralSaveActionListener;
+import actionlisteners.NextStepActionListener;
 import actionlisteners.WindowCloseActionListener;
 import java.awt.BorderLayout;
 import java.awt.Container;
@@ -53,6 +54,7 @@ public class GUI implements Runnable {
     //menun itemit
     private JMenu file;
     private JMenu edit;
+    private JMenu controls;
     //file menun itemit
     private JMenuItem open;
     private JMenuItem save;
@@ -60,6 +62,8 @@ public class GUI implements Runnable {
     private JMenuItem exit;
     //edit menun itemit
     private JMenuItem options;
+    //controls menun itemit
+    private JMenuItem nextstep;
     //panelin itemit
     JButton[][] table;
     //muut itemit
@@ -126,11 +130,13 @@ public class GUI implements Runnable {
         //menun itemit
         file = new JMenu("File");
         edit = new JMenu("Edit");
+        controls = new JMenu("Controls");
         //file menun itemit
         open = new JMenuItem("Open");
         save = new JMenuItem("Save");
         saveas = new JMenuItem("Save As...");
         exit = new JMenuItem("Exit");
+        nextstep = new JMenuItem("Next step");
         //edit menun itemit
         options = new JMenuItem("Options");
         //panelin itemit
@@ -191,6 +197,8 @@ public class GUI implements Runnable {
                 optionsActionPerformed(evt);
             }
         });
+        
+        nextstep.addActionListener(new NextStepActionListener(this));
 
         //lisätään komponentit toistensa sisään
         file.add(open);
@@ -199,9 +207,12 @@ public class GUI implements Runnable {
         file.add(exit);
 
         edit.add(options);
+        
+        controls.add(nextstep);
 
         menu.add(file);
         menu.add(edit);
+        menu.add(controls);
 
         container.add(menu, BorderLayout.NORTH);
         container.add(panel);
