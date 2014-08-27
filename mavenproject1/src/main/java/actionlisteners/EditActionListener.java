@@ -5,6 +5,7 @@
  */
 package actionlisteners;
 
+import interfaces.GUI;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -23,20 +24,12 @@ import logic.Utilities;
  */
 public class EditActionListener implements ActionListener {
 
-    private JTextField bl;
-    private JTextField dl;
-    private JTextField priority;
-    private ArrayList<Rules> rules;
-    private ButtonGroup rulesgroup;
     private int edit;
+    private GUI gui;
 
-    public EditActionListener(ButtonGroup rulesgroup, JTextField bl, JTextField dl, JTextField priority, ArrayList<Rules> rules, int edit) {
-        this.rulesgroup = rulesgroup;
-        this.bl = bl;
-        this.dl = dl;
-        this.priority = priority;
-        this.rules = rules;
+    public EditActionListener(GUI gui, int edit) {
         this.edit=edit;
+        this.gui=gui;
     }
 
     public String getSelectedButtonText(ButtonGroup buttonGroup) {
@@ -55,24 +48,32 @@ public class EditActionListener implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent ae) {
 
-        String s = getSelectedButtonText(rulesgroup);
+        String s = getSelectedButtonText(gui.getRulesGroup());
         Rules del = null;
+        
+        if(s==null)
+            return;
         
         String[] st = s.split(" ");
         int d = Integer.parseInt(st[1]);
-        for (Rules r : rules) {
+        for (Rules r : gui.getSession().getRules()) {
             if (r.getPriority() == d) {
                 del = r;
                 break;
             }
         }
 
+        
+        gui.getSession().getRules().remove(del);
+        gui.createOptionsComponents(gui.getOptionsWindow());
         if (edit==1&&del!=null) {
-            bl.setText(Utilities.listToString(del.getBirth()));
-            dl.setText(Utilities.listToString(del.getDie()));
-            priority.setText(del.getPriority() + "");
+            gui.getBl().setText(Utilities.listToString(del.getBirth()));
+            gui.getDl().setText(Utilities.listToString(del.getDie()));
+            gui.getPriority().setText(del.getPriority() + "");
         }
-        rules.remove(del);
+        gui.getOptionsWindow().pack();
+        gui.getOptionsWindow().setVisible(true);
+        
     }
 
 }

@@ -7,7 +7,6 @@
 package actionlisteners;
 
 import interfaces.GUI;
-import interfaces.Gui;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -56,7 +55,7 @@ public class GeneralSaveActionListener implements ActionListener{
             ok.setText("Ok");
             cancel.setText("Cancel");
             
-            ok.addActionListener(new WindowCloseActionListener(frame));
+            ok.addActionListener(new WindowCloseActionListener(gui,frame,0));
             cancel.addActionListener(new CancelActionListener(frame, d));
             
             frame.getContentPane().add(label, BorderLayout.NORTH);

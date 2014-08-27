@@ -6,20 +6,22 @@
 
 package actionlisteners;
 
+import actionlisteners.WindowCloseActionListener;
+import interfaces.GUI;
 import interfaces.Session;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JTextField;
 import logic.Rules;
 import logic.Utilities;
-
-import actionlisteners.WindowCloseActionListener;
 
 /**
  *
@@ -27,46 +29,43 @@ import actionlisteners.WindowCloseActionListener;
  */
 public class AddRule implements ActionListener{
     
-    Session session;
-    private JTextField bc;
-    private JTextField dc;
-    private JTextField priority;
+    private GUI gui;
 
-    public AddRule(Session session, JTextField bc, JTextField dc, JTextField priority){
-        this.session=session;
-        this.bc=bc;
-        this.dc=dc;
-        this.priority=priority;
+    public AddRule(GUI gui){
+        this.gui=gui;
     }
     
     @Override
     public void actionPerformed(ActionEvent ae) {
         
-        if(!Utilities.correctConditionList(bc.getText())){
-            bc.setText("Syntax error: list conditions (integers) separated with comma.");
+        if(!Utilities.correctConditionList(gui.getBl().getText())){
+            gui.getBl().setText("Syntax error: list conditions (integers) separated with comma.");
             return;
         }
-        if(!Utilities.correctConditionList(dc.getText())){
-            dc.setText("Syntax error: list conditions (integers) separated with comma.");
+        if(!Utilities.correctConditionList(gui.getDl().getText())){
+            gui.getDl().setText("Syntax error: list conditions (integers) separated with comma.");
             return;
         }
         
         ArrayList<Integer> bl = new ArrayList<Integer>();
         ArrayList<Integer> dl = new ArrayList<Integer>();
         Rules rule;
-        int prior = Integer.parseInt(priority.getText());
-        String[] tmp = bc.getText().split(",");
+        int prior = Integer.parseInt(gui.getPriority().getText());
+        String[] tmp = gui.getBl().getText().split(",");
         for(String s : tmp)
             bl.add(Integer.parseInt(s));
-        tmp = dc.getText().split(",");
+        tmp = gui.getDl().getText().split(",");
         for(String s : tmp)
             dl.add(Integer.parseInt(s));
-        bc.setText("");
-        dc.setText("");
-        priority.setText("");
+        gui.getBl().setText("");
+        gui.getDl().setText("");
+        gui.getPriority().setText("");
         rule=new Rules(bl,dl,prior);
         try{
-            session.addRule(rule);
+            gui.getSession().addRule(rule);
+            gui.createOptionsComponents(gui.getOptionsWindow());
+            gui.getOptionsWindow().pack();
+            gui.getOptionsWindow().setVisible(true);
         }catch (Exception e){
             JFrame frame = new JFrame("Error");
             JLabel label = new JLabel();
@@ -74,7 +73,7 @@ public class AddRule implements ActionListener{
             label.setText("Unable to add rule:\n" + e.toString());
             button.setText("Ok");
             
-            button.addActionListener(new WindowCloseActionListener(frame));
+            button.addActionListener(new WindowCloseActionListener(gui,frame,0));
             
             frame.getContentPane().add(label, BorderLayout.NORTH);
             frame.getContentPane().add(button);

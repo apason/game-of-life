@@ -32,6 +32,7 @@ import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 import logic.Rules;
 import logic.Utilities;
+import logic.World;
 
 /**
  *
@@ -44,6 +45,7 @@ public class GUI implements Runnable {
     private int iterationsperstep;
     private int timeperstep;
 
+    //main windown komponentit!
     private JFrame frame;
     //framen itemit
     private JMenuBar menu;
@@ -63,13 +65,44 @@ public class GUI implements Runnable {
     //muut itemit
     private JFileChooser filechooser;
     private JFrame optionswindow;
-    //private JTabbedPane optionspane;
-    
+
+    //optionswindown komponentit!
+    //options
+    private JTabbedPane optionspane;
+    //välilehdet
+    private JPanel rulestab;
+    private JPanel generaltab;
+    //rulestabin itemit
+    private JPanel ruleslisteditremove;
+    private JPanel rulesadd;
+    //rulesaddin itemit
+    private JLabel rulesaddtitle;
+    private JTextField bl;
+    private JTextField dl;
+    private JTextField priority;
+    private JButton add;
+    //ruleslisteditremoven itemit
+    private ButtonGroup rulesgroup;
+    private JButton editbutton;
+    private JButton remove;
+    private JButton rulesok;
+    //generaltabin itemit
+    private JPanel generaloptions;
+    //generaloptionsin itemit
+    private JLabel sizetitle;
+    private JTextField size;
+    private JLabel steptimetitle;
+    private JTextField steptime;
+    private JLabel iterationstitle;
+    private JTextField iterations;
+    private JButton generalsave;
+    private JButton generalok;
 
     public GUI() {
         session = new Session();
-        iterationsperstep=1;
-        timeperstep=350;
+        //session.setWorld(new World(50,session.getRules())); //aiheuttaa oudon exceptionin
+        iterationsperstep = 1;
+        timeperstep = 350;
     }
 
     @Override
@@ -79,13 +112,14 @@ public class GUI implements Runnable {
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         createComponents(frame.getContentPane());
-        
+
         frame.pack();
         frame.setVisible(true);
-        
+
     }
 
-    private void createComponents(Container container) {
+    public void createComponents(Container container) {
+        container.removeAll();
         //framen itemit
         menu = new JMenuBar();
         panel = new JPanel();
@@ -100,33 +134,32 @@ public class GUI implements Runnable {
         //edit menun itemit
         options = new JMenuItem("Options");
         //panelin itemit
-        if(session.getWorld()!=null){
+        if (session.getWorld() != null) {
             int size = session.getWorld().getMap().length;
             int priority;
             table = new JButton[size][size];
-            panel.setLayout(new GridLayout(size,size));
-            for(int i=0;i<size;i++)
-                for(int j=0;j<size;j++){
-                    table[i][j]=new JButton();
-                    try{
+            panel.setLayout(new GridLayout(size, size));
+            for (int i = 0; i < size; i++) {
+                for (int j = 0; j < size; j++) {
+                    table[i][j] = new JButton();
+                    try {
                         table[i][j].setText("" + session.getWorld().getMap()[i][j].getRules().getPriority());
-                    }catch(Exception e){
+                    } catch (Exception e) {
                         table[i][j].setText("0");
                     }
                     panel.add(table[i][j]);
-                    
-                    
+
                 }
-        }
-        else
+            }
+        } else {
             table = null;
-        
+        }
+
         //muut itemit
         filechooser = new JFileChooser();
         optionswindow = new JFrame("Options");
-        
+
         optionswindow.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        
 
         //actionlistenerien määritys
         open.addActionListener(new java.awt.event.ActionListener() {
@@ -134,25 +167,25 @@ public class GUI implements Runnable {
                 openActionPerformed(evt);
             }
         });
-        
+
         save.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 saveActionPerformed(evt);
             }
         });
-        
+
         saveas.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 saveasActionPerformed(evt);
             }
         });
-        
+
         exit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 exitActionPerformed(evt);
             }
         });
-        
+
         options.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 optionsActionPerformed(evt);
@@ -164,7 +197,7 @@ public class GUI implements Runnable {
         file.add(save);
         file.add(saveas);
         file.add(exit);
-        
+
         edit.add(options);
 
         menu.add(file);
@@ -173,96 +206,97 @@ public class GUI implements Runnable {
         container.add(menu, BorderLayout.NORTH);
         container.add(panel);
     }
-    
-    private void createOptionsComponents(Container container){
+
+    public void createOptionsComponents(Container container) {
+        optionswindow.getContentPane().removeAll(); //pakko
         //options
-        JTabbedPane optionspane = new JTabbedPane();
+        optionspane = new JTabbedPane();
         //välilehdet
-        JPanel rulestab = new JPanel();
-        JPanel generaltab = new JPanel();
+        rulestab = new JPanel();
+        generaltab = new JPanel();
         //rulestabin itemit
-        JPanel ruleslisteditremove = new JPanel();
-        JPanel rulesadd = new JPanel();
+        ruleslisteditremove = new JPanel();
+        rulesadd = new JPanel();
         //rulesaddin itemit
-        JLabel rulesaddtitle = new JLabel();
-        JTextField bl = new JTextField();
-        JTextField dl = new JTextField();
-        JTextField priority = new JTextField();
-        JButton add = new JButton();
+        rulesaddtitle = new JLabel();
+        bl = new JTextField();
+        dl = new JTextField();
+        priority = new JTextField();
+        add = new JButton();
         //ruleslisteditremoven itemit
-        ButtonGroup rulesgroup = new ButtonGroup();
-        JButton edit = new JButton();
-        JButton remove = new JButton();
-        JButton rulesok = new JButton();
+        rulesgroup = new ButtonGroup();
+        editbutton = new JButton();
+        remove = new JButton();
+        rulesok = new JButton();
         //generaltabin itemit
-        JPanel generaloptions = new JPanel();
+        generaloptions = new JPanel();
         //generaloptionsin itemit
-        JLabel sizetitle = new JLabel();
-        JTextField size = new JTextField();
-        JLabel steptimetitle = new JLabel();
-        JTextField steptime = new JTextField();
-        JLabel iterationstitle = new JLabel();
-        JTextField iterations = new JTextField();
-        JButton generalsave = new JButton();
-        JButton generalok = new JButton();
-        
+        sizetitle = new JLabel();
+        size = new JTextField();
+        steptimetitle = new JLabel();
+        steptime = new JTextField();
+        iterationstitle = new JLabel();
+        iterations = new JTextField();
+        generalsave = new JButton();
+        generalok = new JButton();
+
         //rulestab
         rulesaddtitle.setText("Add/modify rules here:");
         dl.setText("Dead conditions (separate with comma)");
         bl.setText("Birth conditions (separate with comma)");
         priority.setText("Priority (integer)");
         add.setText("Add");
-        edit.setText("Edit");
+        editbutton.setText("Edit");
         remove.setText("Remove");
         rulesok.setText("Ok");
-        
+
         //generaltab
         sizetitle.setText("Edge size:");
-        if(session.getWorld()!=null)
+        if (session.getWorld() != null) {
             size.setText(session.getWorld().getMap().length + "");
-        else
+        } else {
             size.setText("0");
-        
+        }
+
         steptimetitle.setText("Time per step (ms):");
-        steptime.setText(timeperstep+"");
+        steptime.setText(timeperstep + "");
         iterationstitle.setText("Iterations per step:");
-        iterations.setText(iterationsperstep+"");
+        iterations.setText(iterationsperstep + "");
         generalsave.setText("Save");
         generalok.setText("Ok");
-        
-        if(session!=null && session.getWorld()!=null && session.getWorld().getRules()!=null){
+
+        if (session != null && session.getWorld() != null && session.getWorld().getRules() != null) {
             ArrayList<Rules> rules = session.getWorld().getRules();
-            for(Rules r : rules){
+            for (Rules r : rules) {
                 JRadioButton tmp = new JRadioButton();
                 tmp.setText("Rule " + r.getPriority());
                 rulesgroup.add(tmp);
                 ruleslisteditremove.add(tmp);
             }
         }
-        
+
         rulestab.setLayout(new BorderLayout());
-        rulesadd.setLayout(new BoxLayout(rulesadd,BoxLayout.Y_AXIS));
+        rulesadd.setLayout(new BoxLayout(rulesadd, BoxLayout.Y_AXIS));
         ruleslisteditremove.setLayout(new BoxLayout(ruleslisteditremove, BoxLayout.Y_AXIS));
-        
+
         //actionlistenerit
-        add.addActionListener(new AddRule(session,dl,bl,priority));
-        edit.addActionListener(new EditActionListener(rulesgroup, dl,bl,priority, session.getRules(), 1));
-        remove.addActionListener(new EditActionListener(rulesgroup, dl,bl,priority, session.getRules(), 0));
-        rulesok.addActionListener(new WindowCloseActionListener(optionswindow));
-        generalsave.addActionListener(new GeneralSaveActionListener(this,size,steptime,iterations));
-        generalok.addActionListener(new WindowCloseActionListener(optionswindow));
-        
+        add.addActionListener(new AddRule(this));
+        editbutton.addActionListener(new EditActionListener(this, 1));
+        remove.addActionListener(new EditActionListener(this, 0));
+        rulesok.addActionListener(new WindowCloseActionListener(this,optionswindow,1));
+        generalsave.addActionListener(new GeneralSaveActionListener(this, size, steptime, iterations));
+        generalok.addActionListener(new WindowCloseActionListener(this,optionswindow,1));
+
         //pakataan komponentit toistensa sisään
-        
         rulesadd.add(rulesaddtitle);
         rulesadd.add(bl);
         rulesadd.add(dl);
         rulesadd.add(priority);
         rulesadd.add(add);
-        
-        ruleslisteditremove.add(edit);
+
+        ruleslisteditremove.add(editbutton);
         ruleslisteditremove.add(remove);
-        
+
         generaltab.setLayout(new BoxLayout(generaltab, BoxLayout.Y_AXIS));
         generaltab.add(sizetitle);
         generaltab.add(size);
@@ -272,72 +306,99 @@ public class GUI implements Runnable {
         generaltab.add(iterations);
         generaltab.add(generalsave);
         generaltab.add(generalok);
-        
+
         rulestab.add(rulesadd);
         rulestab.add(ruleslisteditremove, BorderLayout.EAST);
         rulestab.add(rulesok, BorderLayout.SOUTH);
-        
+
         generaltab.add(generaloptions);
-        
+
         optionspane.addTab("Rules", rulestab);
         optionspane.addTab("General", generaltab);
         container.add(optionspane);
     }
-    
-    
-    //tapahtumien käsittely
 
-    private void openActionPerformed(ActionEvent evt){
+    //tapahtumien käsittely
+    private void openActionPerformed(ActionEvent evt) {
         filechooser.setDialogTitle("Open");
         int returnVal = filechooser.showOpenDialog(frame);
-        if (returnVal == javax.swing.JFileChooser.APPROVE_OPTION){
+        if (returnVal == javax.swing.JFileChooser.APPROVE_OPTION) {
             File file = filechooser.getSelectedFile();
             session.load(Utilities.correctFilename(file.getName()));
-            filename=Utilities.correctFilename(file.getName());
-        }
-        else
+            filename = Utilities.correctFilename(file.getName());
+        } else {
             System.out.println("error: unable to load file\n" + evt.getActionCommand());
+        }
+        createComponents(frame.getContentPane());
+        frame.pack();
+        frame.setVisible(true);
     }
-    
-    private void saveActionPerformed(ActionEvent evt){
-        if(filename!=null)
+
+    private void saveActionPerformed(ActionEvent evt) {
+        if (filename != null) {
             session.save(Utilities.correctFilename(filename));
-        else
+        } else {
             saveasActionPerformed(evt);
+        }
     }
-    
-    private void saveasActionPerformed(ActionEvent evt){
+
+    private void saveasActionPerformed(ActionEvent evt) {
         filechooser.setDialogTitle("Save As ");
         filechooser.setApproveButtonText("Save");
         int returnVal = filechooser.showOpenDialog(frame);
-        if (returnVal == javax.swing.JFileChooser.APPROVE_OPTION){
+        if (returnVal == javax.swing.JFileChooser.APPROVE_OPTION) {
             File file = filechooser.getSelectedFile();
             session.save(Utilities.correctFilename(file.getName()));
-        }
-        else
+        } else {
             System.out.println("error: unabe to save file\n" + evt.getActionCommand());
+        }
     }
-    
-    private void exitActionPerformed(ActionEvent evt){
+
+    private void exitActionPerformed(ActionEvent evt) {
         System.exit(0);
     }
-    
-    private void optionsActionPerformed(ActionEvent evt){
+
+    private void optionsActionPerformed(ActionEvent evt) {
 
         optionswindow.setPreferredSize(new Dimension(500, 350));
 
         createOptionsComponents(optionswindow.getContentPane());
         optionswindow.pack();
         optionswindow.setVisible(true);
-        
+
     }
-    public void setTimePerStep(int timeperstep){
-        this.timeperstep=timeperstep;
+
+    public void setTimePerStep(int timeperstep) {
+        this.timeperstep = timeperstep;
     }
-    public void setIterationsPerStep(int iterationsperstep){
-        this.iterationsperstep=iterationsperstep;
+
+    public void setIterationsPerStep(int iterationsperstep) {
+        this.iterationsperstep = iterationsperstep;
     }
-    public Session getSession(){
+
+    public Session getSession() {
         return session;
+    }
+
+    public JFrame getOptionsWindow() {
+        return optionswindow;
+    }
+
+    public JTextField getBl() {
+        return bl;
+    }
+
+    public JTextField getDl() {
+        return dl;
+    }
+
+    public JTextField getPriority() {
+        return priority;
+    }
+    public ButtonGroup getRulesGroup(){
+        return rulesgroup;
+    }
+    public JFrame getFrame(){
+        return frame;
     }
 }
