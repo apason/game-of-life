@@ -6,16 +6,16 @@ import java.util.Random;
 import java.io.Serializable;
 
 /**
- * Sisältää solutaulukon ja tiedot solujen tyypeistä sekä solutaulukkoon ja sen kehitykseen liittyvät metodit
+ * Sisältää solutaulukon ja tiedot solujen tyypeistä sekä solutaulukkoon ja sen kehitykseen liittyvät metodit.
  * @author apa
  */
-
 public class World implements Serializable {
+    /** Simuloitava maailma. Taulukollinen soluja jotka ovat joko kuolleita tai edustavat tiettyä "lajia" */
     private Cell[][] map;
+    /** Kaikki mahdolliset "lajit" sisältävä attribuutti. */
     private ArrayList<Rules> rules;
     
     /**
-     * 
      * @param size Määrittää Worldin sisältävän solutaulukon koon
      * @param rules Sisältää kaikki mahdolliset Worlissa olevien solujen tyypiy (Rules:t)
      */
@@ -58,7 +58,6 @@ public class World implements Serializable {
         
         for(int i=0;i<map.length;i++)
             for(int j=0;j<map.length;j++){
-                //downgrade??
                 eliminate(i,j,tmp);
                 giveBirth(i,j,tmp);
             }
@@ -126,27 +125,13 @@ public class World implements Serializable {
             for(int x=j-1;x<=j+1;x++){
                 if((y==i&&x==j)||y<0||y>=map.length||x<0||x>=map.length||map[y][x].getRules()==null)
                     continue;
-                //setti vois olla parempi tähän
                 prioritys.add(map[y][x].getRules().getPriority());
             }
         return prioritys;
     }
     
-//    //turha metodi
-//    public int getBiggestPriority(int i, int j){
-//        int biggest=0;
-//        for(int y=i-1;y<=i+1;y++)
-//            for(int x=j-1;x<=j+1;x++){
-//                if((y==i&&x==j)||y<0||y>=map.length||x<0||x>=map.length||map[y][x].getRules()==null)
-//                    continue;
-//                int priority = map[y][x].getRules().getPriority();
-//                biggest=priority>biggest?priority:biggest;
-//            }
-//        return biggest;
-//    }
-    
     /**
-     * Tulostaa maailman.
+     * Tulostaa maailman. Metodi ei käytössä graafisessa käyttöliittymässä.
      */
     public void printWorld(){
         for(int i=0;i<map.length;i++){
@@ -179,6 +164,8 @@ public class World implements Serializable {
                 int x = random.nextInt()%(rules.size()+1);
                 if(x>0)
                     map[i][j].setRules(rules.get(x-1));
+                else
+                    map[i][j].setRules(null);
             }
     }
 }

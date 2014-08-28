@@ -10,10 +10,12 @@ import interfaces.*;
  * @author apa
  */
 public class Loader {
+    
+    /** Määrittelee tiedoston josta luku tapahtuu */
     private String filename;
     
     /**
-     * Konstruktori
+     * Konstruktori ottaa parametrinä tiedoston josta luku tapahtuu.
      * @param filename tiedosto josta Session luetaan
      */
     public Loader (String filename){
@@ -22,7 +24,7 @@ public class Loader {
     
 
     /**
-     * Lataa session konstrukrotille määritellystä tiedostosta
+     * Lataa session konstrukrotille määritellystä tiedostosta.
      * @return tiedostosta luettu Session
      * @throws Exception
      */

@@ -43,7 +43,7 @@ import logic.Utilities;
 import logic.World;
 
 /**
- *
+ * Ohjelman graafinen käyttöliittymä.
  * @author apa
  */
 public class GUI implements Runnable {

@@ -1,11 +1,5 @@
 package interfaces;
 
-/**
- * Sisältää ne tiedot mitä tarvitaan tallennukseen. Toimii käyttöliittymänä
- * guille.
- *
- * @author apa
- */
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -20,10 +14,11 @@ import logic.*;
  */
 public class Session implements Serializable {
 
+    /** Sisältää tiedon onko start() metodi suorituksessa */
     private boolean running;
+    /** Sessioniin liittyvä World olio. Suurin osa (esim. evolve()) simulaatiosta tapahtuu tämän olion metodeilla */
     private World world;
-    //private ArrayList<Integer> prioritys;
-    private Cell[][] map; //tarviiko tätä?
+    /** Tieto kaikista eri solutyypeistä/"lajeista", annetaan parametriksi Worldin konstruktorille. */
     private ArrayList<Rules> rules;
 
     /**
@@ -31,10 +26,7 @@ public class Session implements Serializable {
      */
     public Session() {
         running = false;
-        //prioritys = new ArrayList<Integer>();
         rules = new ArrayList<Rules>();
-
-        //world cell taulukon alustus, arraylistien alustus, worldin alustus
     }
 
     public boolean getRunning() {
@@ -44,10 +36,6 @@ public class Session implements Serializable {
     public World getWorld() {
         return world;
     }
-
-//    public ArrayList<Integer> getPrioritys() {
-//        return prioritys;
-//    }
 
     public ArrayList<Rules> getRules() {
         return rules;
@@ -59,22 +47,18 @@ public class Session implements Serializable {
 
     /**
      * Luo ja alustaa World olion
-     *
      * @param size maailmalle annettavan solumäärän neliöjuuri
      */
     public void createWorld(int size) {
-        //tutki että rules on ok
         world = new World(size, rules);
         world.initializeMap();
-        //map = world.getMap();
     }
 
     /**
      * Lisää rules listaan uuden Rules olion (mikäli se ei ole ristiriidassa
      * itsensä tai muiden kanssa)
-     *
      * @param rule lisättävä sääntö
-     * @throws Exception e
+     * @throws RuntimeException jos lisättävä Rules ei ole validi
      */
     public void addRule(Rules rule) throws Exception {
 
@@ -97,19 +81,12 @@ public class Session implements Serializable {
 
     /**
      * Poistaa rules listalta annetun Rules olion
-     *
      * @param rule poistettava sääntö
      */
     public void removeRule(Rules rule) {
         rules.remove(rule);
     }
 
-//    public int checkSessionIntegrity(){
-//        //mappi alustettu, prioriteetit tiedossa, ja kaikki erilaisia, prioriteetit oikealla rangella
-//        //jne
-//        
-//        return 0;
-//    }
     /**
      * Käynnistää simulaation
      */
@@ -144,7 +121,6 @@ public class Session implements Serializable {
 
     /**
      * Tallentaa senhetkisen simulaation tiedostoon
-     *
      * @param filename tiedosto johon tallennus tapahtuu
      */
     public void save(String filename) {
@@ -159,7 +135,6 @@ public class Session implements Serializable {
 
     /**
      * Lataa vanhan simulaation tiedostosta
-     *
      * @param filename tiedosto josta lataus tapahtuu
      */
     public void load(String filename) {
@@ -169,9 +144,9 @@ public class Session implements Serializable {
             loaded = loader.load();
             //this.map = loaded.map;
             //this.prioritys = loaded.prioritys;
-            this.rules = loaded.rules;
             this.running = loaded.running;
             this.world = loaded.world;
+            running=false;
         } catch (Exception e) {
             System.out.println("Error: cannot read from file");
             e.printStackTrace();

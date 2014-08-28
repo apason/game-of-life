@@ -11,57 +11,18 @@ import javax.swing.SwingUtilities;
 import logic.*;
 
 /**
- *
+ * Main luokka josta ohjelma käynnistetään.
  * @author apa
  */
 public class Main {
 
+    /**
+     * Ohjelman käynnistys
+     * @param args ohjelma ei käsittele sille annettuja argumenttejä
+     */
     public static void main(String[] args) {
         GUI gui = new GUI();
         SwingUtilities.invokeLater(gui);
-//        Session session = new Session();
-//        Rules rule1;
-//
-//        int[] r1d = {0, 1, 4, 5, 6, 7, 8};
-//        ArrayList<Integer> r1dl = new ArrayList<Integer>();
-//        ArrayList<Integer> r1bl = new ArrayList<Integer>();
-//        r1bl.add(3);
-//
-//        for (int i : r1d) {
-//            r1dl.add(i);
-//        }
-//
-//        rule1 = new Rules(r1bl, r1dl, 1);
-//
-//        try{
-//            session.addRule(rule1);
-//        } catch (Exception e){
-//            System.out.println(e.toString());
-//            return;
-//        }
-//        
-//        session.createWorld(3);
-//        
-//        session.getWorld().getMap()[0][1].setRules(rule1);
-//        session.getWorld().getMap()[1][1].setRules(rule1);
-//        session.getWorld().getMap()[2][1].setRules(rule1);
-//        session.getWorld().getMap()[1][0].setRules(rule1);
-//        
-//        for(int i=0;i<2;i++){
-//            session.getWorld().printWorld();
-//            System.out.println("");
-//            session.getWorld().evolve();
-//        }
-//        
-//        session.save("jalla.dat");
-//        session.setWorld(null);
-//        session.load("jalla.dat");
-//        
-//        for(int i=0;i<2;i++){
-//            session.getWorld().printWorld();
-//            System.out.println("");
-//            session.getWorld().evolve();
-//        }
     }
 
 }

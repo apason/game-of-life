@@ -8,8 +8,16 @@ import java.io.Serializable;
  * @author apa
  */
 public class Cell implements Serializable {
+    /** 
+     *  Määrittää solun tyypin. Jos rules attribuutti
+     *  on null, niin solu on kuollut.
+     */
     private Rules rules;
     
+    /**
+     * Konstruktori. Solulle annetaan solun tyyppitieto.
+     * @param rules Määrittää solun tyypin.
+     */
     public Cell(Rules rules){
         this.rules=rules;
     }
@@ -23,7 +31,7 @@ public class Cell implements Serializable {
     }
     
     /**
-     * Palauttaa itseään vastaavan (samantilaisen olion)
+     * Palauttaa itseään vastaavan (samantilaisen) olion.
      * @return samantilainen olio
      */
     public Cell copy(){

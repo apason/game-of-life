@@ -11,7 +11,10 @@ import interfaces.*;
  * @author apa
  */
 public class Saver {
+    
+    /** Tiedosto johon kirjoitus tapahtuu */
     private String filename;
+    /** Tallennettava simulaatio (Session) */
     private Session session;
     
     
@@ -25,8 +28,7 @@ public class Saver {
     }
     
     /**
-     * Tallentaa konstruktorissa määriteltyyn tiedostoon konstruktorissa määritellyn session
-     * 
+     * Tallentaa konstruktorissa määriteltyyn tiedostoon konstruktorissa määritellyn Sessionin
      * @throws Exception 
      */
     public void save() throws Exception{
