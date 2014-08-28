@@ -22,7 +22,7 @@ public class Main {
 //        Session session = new Session();
 //        Rules rule1;
 //
-//        int[] r1d = {1, 4, 5, 6, 7, 8};
+//        int[] r1d = {0, 1, 4, 5, 6, 7, 8};
 //        ArrayList<Integer> r1dl = new ArrayList<Integer>();
 //        ArrayList<Integer> r1bl = new ArrayList<Integer>();
 //        r1bl.add(3);
@@ -45,8 +45,9 @@ public class Main {
 //        session.getWorld().getMap()[0][1].setRules(rule1);
 //        session.getWorld().getMap()[1][1].setRules(rule1);
 //        session.getWorld().getMap()[2][1].setRules(rule1);
+//        session.getWorld().getMap()[1][0].setRules(rule1);
 //        
-//        for(int i=0;i<5;i++){
+//        for(int i=0;i<2;i++){
 //            session.getWorld().printWorld();
 //            System.out.println("");
 //            session.getWorld().evolve();
@@ -56,7 +57,7 @@ public class Main {
 //        session.setWorld(null);
 //        session.load("jalla.dat");
 //        
-//        for(int i=0;i<5;i++){
+//        for(int i=0;i<2;i++){
 //            session.getWorld().printWorld();
 //            System.out.println("");
 //            session.getWorld().evolve();

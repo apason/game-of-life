@@ -70,7 +70,9 @@ public class EditActionListener implements ActionListener {
             gui.getBl().setText(Utilities.listToString(del.getBirth()));
             gui.getDl().setText(Utilities.listToString(del.getDie()));
             gui.getPriority().setText(del.getPriority() + "");
+            gui.getColor().setBackground(gui.getColorMap().get(del.getPriority()));
         }
+        gui.getColorMap().remove(del.getPriority());
         gui.getOptionsWindow().pack();
         gui.getOptionsWindow().setVisible(true);
         

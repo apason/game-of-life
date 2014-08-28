@@ -6,20 +6,27 @@
 package interfaces;
 
 import actionlisteners.AddRule;
+import actionlisteners.CellActionListener;
 import actionlisteners.EditActionListener;
 import actionlisteners.GeneralSaveActionListener;
 import actionlisteners.NextStepActionListener;
+import actionlisteners.RandomizeActionListener;
+import actionlisteners.StartActionListener;
+import actionlisteners.StopActionListener;
 import actionlisteners.WindowCloseActionListener;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
+import javax.swing.JColorChooser;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -45,6 +52,7 @@ public class GUI implements Runnable {
     private String filename;
     private int iterationsperstep;
     private int timeperstep;
+    private HashMap<Integer, Color> colormap;
 
     //main windown komponentit!
     private JFrame frame;
@@ -56,6 +64,7 @@ public class GUI implements Runnable {
     private JMenu edit;
     private JMenu controls;
     //file menun itemit
+    private JMenuItem newsession;
     private JMenuItem open;
     private JMenuItem save;
     private JMenuItem saveas;
@@ -64,11 +73,15 @@ public class GUI implements Runnable {
     private JMenuItem options;
     //controls menun itemit
     private JMenuItem nextstep;
+    private JMenuItem start;
+    private JMenuItem stop;
+    private JMenuItem randomize;
     //panelin itemit
-    JButton[][] table;
+    JMenuBar[][] table;
     //muut itemit
     private JFileChooser filechooser;
     private JFrame optionswindow;
+    private JColorChooser colorchooser;
 
     //optionswindown komponentit!
     //options
@@ -85,6 +98,7 @@ public class GUI implements Runnable {
     private JTextField dl;
     private JTextField priority;
     private JButton add;
+    private JButton color;
     //ruleslisteditremoven itemit
     private ButtonGroup rulesgroup;
     private JButton editbutton;
@@ -107,12 +121,13 @@ public class GUI implements Runnable {
         //session.setWorld(new World(50,session.getRules())); //aiheuttaa oudon exceptionin
         iterationsperstep = 1;
         timeperstep = 350;
+        colormap=new HashMap<Integer,Color>();
     }
 
     @Override
     public void run() {
         frame = new JFrame("Apa's cellular automata");
-        frame.setPreferredSize(new Dimension(400, 200));
+        frame.setPreferredSize(new Dimension(650, 425));
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         createComponents(frame.getContentPane());
@@ -132,27 +147,49 @@ public class GUI implements Runnable {
         edit = new JMenu("Edit");
         controls = new JMenu("Controls");
         //file menun itemit
+        newsession = new JMenuItem("New");
         open = new JMenuItem("Open");
         save = new JMenuItem("Save");
         saveas = new JMenuItem("Save As...");
         exit = new JMenuItem("Exit");
-        nextstep = new JMenuItem("Next step");
         //edit menun itemit
         options = new JMenuItem("Options");
+        //controls menun itemit
+        nextstep = new JMenuItem("Next step");
+        start = new JMenuItem("Start");
+        stop = new JMenuItem("Stop");
+        randomize = new JMenuItem("Randomize");
         //panelin itemit
         if (session.getWorld() != null) {
             int size = session.getWorld().getMap().length;
-            int priority;
-            table = new JButton[size][size];
+            int prior;
+            table = new JMenuBar[size][size];
             panel.setLayout(new GridLayout(size, size));
             for (int i = 0; i < size; i++) {
                 for (int j = 0; j < size; j++) {
-                    table[i][j] = new JButton();
-                    try {
-                        table[i][j].setText("" + session.getWorld().getMap()[i][j].getRules().getPriority());
-                    } catch (Exception e) {
-                        table[i][j].setText("0");
+                    table[i][j]=new JMenuBar();
+                    JMenu item = new JMenu();
+                    item.setPreferredSize(new Dimension(300,300));
+                    try{
+                        prior=session.getWorld().getMap()[i][j].getRules().getPriority();
+                        item.setText("" + prior);
+                        table[i][j].setBackground(colormap.get(prior));
+                    }catch(Exception e){
+                        item.setText("0");
                     }
+                    for(Rules r : session.getRules()){
+                        JMenuItem cellitem = new JMenuItem();
+                        cellitem.setText(""+r.getPriority());
+                        cellitem.setBackground(colormap.get(r.getPriority()));
+                        cellitem.addActionListener(new CellActionListener(this,i,j,r));
+                        item.add(cellitem);
+                    }
+                    //kuollut solu
+                    JMenuItem cellitem=new JMenuItem();
+                    cellitem.setText("0");
+                    cellitem.addActionListener(new CellActionListener(this,i,j,null));
+                    item.add(cellitem);
+                    table[i][j].add(item);
                     panel.add(table[i][j]);
 
                 }
@@ -164,10 +201,16 @@ public class GUI implements Runnable {
         //muut itemit
         filechooser = new JFileChooser();
         optionswindow = new JFrame("Options");
+        colorchooser = new JColorChooser();
 
         optionswindow.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
         //actionlistenerien määritys
+        newsession.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                newsessionActionPerformed(evt);
+            }
+        });
         open.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 openActionPerformed(evt);
@@ -199,8 +242,12 @@ public class GUI implements Runnable {
         });
         
         nextstep.addActionListener(new NextStepActionListener(this));
+        start.addActionListener(new StartActionListener(this));
+        stop.addActionListener(new StopActionListener(this));
+        randomize.addActionListener(new RandomizeActionListener(this));
 
         //lisätään komponentit toistensa sisään
+        file.add(newsession);
         file.add(open);
         file.add(save);
         file.add(saveas);
@@ -209,6 +256,9 @@ public class GUI implements Runnable {
         edit.add(options);
         
         controls.add(nextstep);
+        controls.add(start);
+        controls.add(stop);
+        controls.add(randomize);
 
         menu.add(file);
         menu.add(edit);
@@ -234,6 +284,7 @@ public class GUI implements Runnable {
         dl = new JTextField();
         priority = new JTextField();
         add = new JButton();
+        color = new JButton();
         //ruleslisteditremoven itemit
         rulesgroup = new ButtonGroup();
         editbutton = new JButton();
@@ -257,6 +308,7 @@ public class GUI implements Runnable {
         bl.setText("Birth conditions (separate with comma)");
         priority.setText("Priority (integer)");
         add.setText("Add");
+        color.setText("Color");
         editbutton.setText("Edit");
         remove.setText("Remove");
         rulesok.setText("Ok");
@@ -291,6 +343,11 @@ public class GUI implements Runnable {
         ruleslisteditremove.setLayout(new BoxLayout(ruleslisteditremove, BoxLayout.Y_AXIS));
 
         //actionlistenerit
+        color.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                colorActionPerformed(evt);
+            }
+        });
         add.addActionListener(new AddRule(this));
         editbutton.addActionListener(new EditActionListener(this, 1));
         remove.addActionListener(new EditActionListener(this, 0));
@@ -303,6 +360,7 @@ public class GUI implements Runnable {
         rulesadd.add(bl);
         rulesadd.add(dl);
         rulesadd.add(priority);
+        rulesadd.add(color);
         rulesadd.add(add);
 
         ruleslisteditremove.add(editbutton);
@@ -330,6 +388,13 @@ public class GUI implements Runnable {
     }
 
     //tapahtumien käsittely
+    private void newsessionActionPerformed(ActionEvent evt){
+        session=new Session();
+        createComponents(frame.getContentPane());
+        frame.pack();
+        frame.setVisible(true);
+    }
+    
     private void openActionPerformed(ActionEvent evt) {
         filechooser.setDialogTitle("Open");
         int returnVal = filechooser.showOpenDialog(frame);
@@ -363,6 +428,11 @@ public class GUI implements Runnable {
         } else {
             System.out.println("error: unabe to save file\n" + evt.getActionCommand());
         }
+    }
+    private void colorActionPerformed(ActionEvent evt){
+        
+        Color rulescolor = JColorChooser.showDialog(color, "Choose cells color", color.getBackground());
+        color.setBackground(rulescolor);
     }
 
     private void exitActionPerformed(ActionEvent evt) {
@@ -412,4 +482,17 @@ public class GUI implements Runnable {
     public JFrame getFrame(){
         return frame;
     }
+    public int getTimePerStep(){
+        return timeperstep;
+    }
+    public int getIterationsPerStep(){
+        return iterationsperstep;
+    }
+    public HashMap<Integer,Color> getColorMap(){
+        return colormap;
+    }
+    public JButton getColor(){
+        return color;
+    }
 }
+

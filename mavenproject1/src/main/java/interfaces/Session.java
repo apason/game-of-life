@@ -7,9 +7,10 @@ package interfaces;
  * @author apa
  */
 import java.io.Serializable;
-
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 import logic.*;
 
 /**
@@ -90,6 +91,7 @@ public class Session implements Serializable {
         }
 
         rules.add(rule);
+        Collections.sort(rules);
 
     }
 
@@ -111,11 +113,19 @@ public class Session implements Serializable {
     /**
      * Käynnistää simulaation
      */
-    public void start() {
+    public void start(GUI gui) {
         running = true;
         while (running) {
-            world.evolve();
-            //piirrä?
+            for(int i=0;i<gui.getIterationsPerStep(); i++)
+                world.evolve();
+            try{
+            TimeUnit.MILLISECONDS.sleep(gui.getTimePerStep());
+            }catch(Exception e){
+                ;
+            }
+            gui.createComponents(gui.getFrame().getContentPane());
+            gui.getFrame().pack();
+            gui.getFrame().setVisible(true);
         }
 
     }

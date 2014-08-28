@@ -63,6 +63,7 @@ public class AddRule implements ActionListener{
         rule=new Rules(bl,dl,prior);
         try{
             gui.getSession().addRule(rule);
+            gui.getColorMap().put(prior, gui.getColor().getBackground());
             gui.createOptionsComponents(gui.getOptionsWindow());
             gui.getOptionsWindow().pack();
             gui.getOptionsWindow().setVisible(true);
