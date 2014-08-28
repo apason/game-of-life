@@ -142,9 +142,7 @@ public class Session implements Serializable {
         Session loaded;
         try {
             loaded = loader.load();
-            //this.map = loaded.map;
-            //this.prioritys = loaded.prioritys;
-            this.running = loaded.running;
+            this.rules=loaded.rules;
             this.world = loaded.world;
             running=false;
         } catch (Exception e) {
@@ -159,32 +157,35 @@ public class Session implements Serializable {
      * @param o mihin verrataan
      * @return true jos kyseessä sama olio, muuten false
      */
-//    @Override
-//    public boolean equals(Object o){
-//        Session s;
-//        if(o == null)
-//            return false;
-//        if(o.getClass()!=this.getClass())
-//            return false;
-//        s=(Session) o;
-//        if ((s.getWorld()==null && this.getWorld()!=null) || (s.getRules() == null && this.getRules()!=null))
-//            return false;
-//        if((s.getRunning()!=this.getRunning())|| (s.getRules()==null&&this.getRules()!=null))
-//            return false;
-//        if(this.getRules()!=null)
-//            if(this.getRules().size()!= s.getRules().size())
-//                return false;
-//        return true;
-//        
-//    }
-//
-//    @Override
-//    public int hashCode() {
-//        int hash = 5;
-//        hash = 37 * hash + (this.running ? 1 : 0);
-//        hash = 37 * hash + this.rules.size();
-//        hash = 37 * hash + this.world.getMap().length;
-//        return hash;
-//    }
+    @Override
+    public boolean equals(Object o){
+        Session s;
+        if(o == null)
+            return false;
+        if(o.getClass()!=this.getClass())
+            return false;
+        s=(Session) o;
+        if ((s.getWorld()==null && this.getWorld()!=null) || (s.getRules() == null && this.getRules()!=null))
+            return false;
+        if((s.getRules()==null&&this.getRules()!=null))
+            return false;
+        if(this.getRules()!=null)
+            if(this.getRules().size()!= s.getRules().size())
+                return false;
+        if(this.getWorld()!=null){
+            if(this.getWorld().getMap().length!=s.getWorld().getMap().length)
+                return false;
+        }
+        return true;
+        
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 37 * hash + this.rules.size();
+        hash = 37 * hash + this.world.getMap().length;
+        return hash;
+    }
     
 }

@@ -98,6 +98,7 @@ public class WorldTest {
     public void constructorWorksProperly(){
         assertEquals(world1.getRules(), rules);
         assertEquals(2, world1.getMap()[0].length);
+        assertNotNull(world1.getMap()[0][0]);
     }
     
     @Test
@@ -206,6 +207,7 @@ public class WorldTest {
     public void randomizeWorksProperly(){
         
     }
+    
     
     
     
