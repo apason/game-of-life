@@ -12,7 +12,7 @@ import logic.*;
  * toimii osana käyttöliittymää
  * @author apa
  */
-public class Session {
+public class Session implements Runnable{
 
     /** Sisältää tiedon onko start() metodi suorituksessa */
     private boolean running;
@@ -20,13 +20,17 @@ public class Session {
     private World world;
     /** Tieto kaikista eri solutyypeistä/"lajeista", annetaan parametriksi Worldin konstruktorille. */
     private ArrayList<Rules> rules;
+    /** Sessionin tunnettava gui koska rajapinnan Runnable metodi
+     *  Run tarvitsee tämän tiedon eikä sille voi antaa parametrejä. */
+    private GUI gui;
 
     /**
      * Konstruktori
      */
-    public Session() {
+    public Session(GUI gui) {
         running = false;
         rules = new ArrayList<Rules>();
+        this.gui=gui;
     }
 
     public boolean getRunning() {
@@ -55,7 +59,6 @@ public class Session {
      */
     public void createWorld(int size) {
         world = new World(size, rules);
-        world.initializeMap();
     }
 
     /**
@@ -94,7 +97,8 @@ public class Session {
     /**
      * Käynnistää simulaation
      */
-    public void start(GUI gui) {
+    @Override
+    public void run() {
         running = true;
         while (running) {
             for(int i=0;i<gui.getIterationsPerStep(); i++)
@@ -102,11 +106,10 @@ public class Session {
             try{
             TimeUnit.MILLISECONDS.sleep(gui.getTimePerStep());
             }catch(Exception e){
-                ;
+                System.out.println("wait ei toiminut");;
             }
-            gui.createComponents(gui.getFrame().getContentPane());
+            gui.createCells();
             gui.getFrame().pack();
-            gui.getFrame().setVisible(true);
         }
 
     }

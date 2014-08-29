@@ -116,8 +116,8 @@ public class GUI implements Runnable {
     private JButton generalok;
 
     public GUI() {
-        session = new Session();
-        //session.setWorld(new World(50,session.getRules())); //aiheuttaa oudon exceptionin
+        session = new Session(this);
+        session.setWorld(new World(3,session.getRules())); //aiheuttaa oudon exceptionin
         iterationsperstep = 1;
         timeperstep = 350;
         colormap=new HashMap<Integer,Color>();
@@ -126,7 +126,7 @@ public class GUI implements Runnable {
     @Override
     public void run() {
         frame = new JFrame("Apa's cellular automata");
-        frame.setPreferredSize(new Dimension(650, 425));
+        frame.setPreferredSize(new Dimension(650, 650));
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         createComponents(frame.getContentPane());
@@ -140,7 +140,7 @@ public class GUI implements Runnable {
         container.removeAll();
         //framen itemit
         menu = new JMenuBar();
-        panel = new JPanel();
+        //panel = new JPanel();
         //menun itemit
         file = new JMenu("File");
         edit = new JMenu("Edit");
@@ -159,44 +159,8 @@ public class GUI implements Runnable {
         stop = new JMenuItem("Stop");
         randomize = new JMenuItem("Randomize");
         //panelin itemit
-        if (session.getWorld() != null) {
-            int size = session.getWorld().getMap().length;
-            int prior;
-            table = new JMenuBar[size][size];
-            panel.setLayout(new GridLayout(size, size));
-            for (int i = 0; i < size; i++) {
-                for (int j = 0; j < size; j++) {
-                    table[i][j]=new JMenuBar();
-                    JMenu item = new JMenu();
-                    item.setPreferredSize(new Dimension(300,300));
-                    try{
-                        prior=session.getWorld().getMap()[i][j].getRules().getPriority();
-                        item.setText("" + prior);
-                        table[i][j].setBackground(colormap.get(prior));
-                    }catch(Exception e){
-                        item.setText("0");
-                    }
-                    for(Rules r : session.getRules()){
-                        JMenuItem cellitem = new JMenuItem();
-                        cellitem.setText(""+r.getPriority());
-                        cellitem.setBackground(colormap.get(r.getPriority()));
-                        cellitem.addActionListener(new CellActionListener(this,i,j,r));
-                        item.add(cellitem);
-                    }
-                    //kuollut solu
-                    JMenuItem cellitem=new JMenuItem();
-                    cellitem.setText("0");
-                    cellitem.addActionListener(new CellActionListener(this,i,j,null));
-                    item.add(cellitem);
-                    table[i][j].add(item);
-                    panel.add(table[i][j]);
-
-                }
-            }
-        } else {
-            table = null;
-        }
-
+        createCells();
+        
         //muut itemit
         filechooser = new JFileChooser();
         optionswindow = new JFrame("Options");
@@ -263,7 +227,53 @@ public class GUI implements Runnable {
         menu.add(controls);
 
         container.add(menu, BorderLayout.NORTH);
-        container.add(panel);
+        //container.add(panel, BorderLayout.CENTER);
+    }
+    
+    public void createCells(){
+        //panel.removeAll();
+        if(panel!=null)
+            frame.getContentPane().remove(panel);
+        panel=new JPanel();
+        //panelin itemit
+        if (session.getWorld() != null) {
+            int size = session.getWorld().getMap().length;
+            int prior;
+            table = new JMenuBar[size][size];
+            panel.setLayout(new GridLayout(size, size));
+            for (int i = 0; i < size; i++) {
+                for (int j = 0; j < size; j++) {
+                    table[i][j]=new JMenuBar();
+                    JMenu item = new JMenu();
+                    item.setPreferredSize(new Dimension(300,300));
+                    try{
+                        prior=session.getWorld().getMap()[i][j].getRules().getPriority();
+                        item.setText("" + prior);
+                        table[i][j].setBackground(colormap.get(prior));
+                    }catch(Exception e){
+                        item.setText("0");
+                    }
+                    for(Rules r : session.getRules()){
+                        JMenuItem cellitem = new JMenuItem();
+                        cellitem.setText(""+r.getPriority());
+                        cellitem.setBackground(colormap.get(r.getPriority()));
+                        cellitem.addActionListener(new CellActionListener(this,i,j,r));
+                        item.add(cellitem);
+                    }
+                    //kuollut solu
+                    JMenuItem cellitem=new JMenuItem();
+                    cellitem.setText("0");
+                    cellitem.addActionListener(new CellActionListener(this,i,j,null));
+                    item.add(cellitem);
+                    table[i][j].add(item);
+                    panel.add(table[i][j]);
+
+                }
+            }
+        } else {
+            table = null;
+        }
+        frame.getContentPane().add(panel, BorderLayout.CENTER);
     }
 
     public void createOptionsComponents(Container container) {
@@ -387,7 +397,7 @@ public class GUI implements Runnable {
 
     //tapahtumien käsittely
     private void newsessionActionPerformed(ActionEvent evt){
-        session=new Session();
+        session=new Session(this);
         createComponents(frame.getContentPane());
         frame.pack();
         frame.setVisible(true);

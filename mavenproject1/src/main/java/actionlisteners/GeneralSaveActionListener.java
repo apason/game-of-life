@@ -45,6 +45,17 @@ public class GeneralSaveActionListener implements ActionListener{
             size.setText("Error: Size must be integer [2,999]");
             return;
         }
+        
+        if(!Utilities.correctIterations(iterations.getText())){
+            iterations.setText("Error: Value must be integer: [1,999");
+            return;
+        }
+        
+        if(!Utilities.correctSteptime(steptime.getText())){
+            steptime.setText("Error: Value must be integer [1,1999]");
+            return;
+        }
+        
         if(gui.getSession().getWorld()!=null && gui.getSession().getWorld().getMap().length!=Integer.parseInt(size.getText())){
             //varoitus ylikirjoituksesta
             JFrame frame = new JFrame("Owerwrite?");
@@ -55,8 +66,8 @@ public class GeneralSaveActionListener implements ActionListener{
             ok.setText("Ok");
             cancel.setText("Cancel");
             
-            ok.addActionListener(new WindowCloseActionListener(gui,frame,0));
-            cancel.addActionListener(new CancelActionListener(frame, d));
+            ok.addActionListener(new GeneralSaveConfirmActionListener(gui,frame, size));
+            cancel.addActionListener(new CancelActionListener(frame));
             
             frame.getContentPane().add(label, BorderLayout.NORTH);
             frame.getContentPane().add(ok, BorderLayout.WEST);
@@ -65,18 +76,8 @@ public class GeneralSaveActionListener implements ActionListener{
             frame.setVisible(true);
             
         }
-        if(d!=0)
-            return;
-        gui.getSession().createWorld(Integer.parseInt(size.getText()));
-        if(!Utilities.correctIterations(iterations.getText())){
-            iterations.setText("Error: Iterations must be integer [1,999]");
-            return;
-        }
+
         gui.setIterationsPerStep(Integer.parseInt(iterations.getText()));
-        if(!Utilities.correctSteptime(steptime.getText())){
-            steptime.setText("Error: Steptime must be integer [1,1999]");
-            return;
-        }
         gui.setTimePerStep(Integer.parseInt(steptime.getText()));
         
     }

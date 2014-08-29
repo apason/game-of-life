@@ -40,7 +40,7 @@ public class SaverTest {
     
     @Before
     public void setUp() {
-        session = new Session();
+        session = new Session(null);
 
         int[] r1d = {1, 4, 5, 6, 7, 8};
         r1dl = new ArrayList<Integer>();
@@ -86,7 +86,7 @@ public class SaverTest {
 
     @Test
     public void saveWorksProperly(){
-        Session session2=new Session();
+        Session session2=new Session(null);
         session.save("testipaska");
         session2.load("testipaska");
         assertTrue(session.equals(session2));

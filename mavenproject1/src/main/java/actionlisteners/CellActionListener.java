@@ -31,10 +31,12 @@ public class CellActionListener implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent ae) {
-        gui.getSession().getWorld().getMap()[i][j].setRules(rules);
-        gui.createComponents(gui.getFrame().getContentPane());
-        gui.getFrame().pack();
-        gui.getFrame().setVisible(true);
+        if (!gui.getSession().getRunning()) {
+            gui.getSession().getWorld().getMap()[i][j].setRules(rules);
+            gui.createComponents(gui.getFrame().getContentPane());
+            gui.getFrame().pack();
+            gui.getFrame().setVisible(true);
+        }
     }
 
 }

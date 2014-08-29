@@ -38,7 +38,7 @@ public class SessionTest {
     
     @Before
     public void setUp() {
-        session1 = new Session();
+        session1 = new Session(null);
     }
     
     @After
@@ -53,7 +53,7 @@ public class SessionTest {
     
     @Test
     public void constructorWorksProperly(){
-        session1 = new Session();
+        session1 = new Session(null);
         assertEquals(false ,session1.getRunning());
         //assertNotNull(session1.getPrioritys());
         assertNotNull(session1.getRules());

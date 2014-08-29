@@ -6,9 +6,7 @@
 package main;
 
 import interfaces.*;
-import java.util.ArrayList;
 import javax.swing.SwingUtilities;
-import logic.*;
 
 /**
  * Main luokka josta ohjelma käynnistetään.

@@ -19,3 +19,4 @@ TUNTIKIRJANPITO
 * 25.8 n. 4h swing...
 * 26.8 n. 4h swing x(
 * 27.8 n. 5h swing <3
+* 28.8 n. 4h swing + dl5 setit

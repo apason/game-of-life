@@ -6,7 +6,7 @@ import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import logic.Rules;
 import logic.World;
-;
+
 
 /**
  * Mahdollistaa aiemmin pelatun pelin tilan lataamisen tiedostosta
@@ -34,7 +34,7 @@ public class Loader {
     public Session load() throws Exception{
         FileInputStream in = new FileInputStream(filename);
         ObjectInputStream data = new ObjectInputStream(in);
-        Session loaded = new Session();
+        Session loaded = new Session(null);
         World world = (World) data.readObject();
         ArrayList<Rules> rules = (ArrayList<Rules>) data.readObject();
         data.close();

@@ -24,7 +24,10 @@ public class StartActionListener implements ActionListener{
 
     @Override
     public void actionPerformed(ActionEvent ae) {
-        gui.getSession().start(gui);
+        if(!gui.getSession().getRunning()){
+            Thread thread = new Thread(gui.getSession());
+            thread.start();
+        }
     }
     
 }
