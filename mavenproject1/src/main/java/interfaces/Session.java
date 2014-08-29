@@ -1,9 +1,9 @@
 package interfaces;
 
-import java.io.Serializable;
+import filehandling.Loader;
+import filehandling.Saver;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import logic.*;
 
@@ -12,7 +12,7 @@ import logic.*;
  * toimii osana käyttöliittymää
  * @author apa
  */
-public class Session implements Serializable {
+public class Session {
 
     /** Sisältää tiedon onko start() metodi suorituksessa */
     private boolean running;
@@ -43,6 +43,10 @@ public class Session implements Serializable {
 
     public void setWorld(World world) {
         this.world = world;
+    }
+    
+    public void setRules(ArrayList<Rules> rules){
+        this.rules=rules;
     }
 
     /**

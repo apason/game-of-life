@@ -1,4 +1,4 @@
-package logic;
+package filehandling;
 
 
 import java.io.FileOutputStream;
@@ -35,7 +35,8 @@ public class Saver {
         
         FileOutputStream out = new FileOutputStream(filename);
         ObjectOutputStream data = new ObjectOutputStream(out);
-        data.writeObject(session);
+        data.writeObject(session.getWorld());
+        data.writeObject(session.getRules());
         data.close();
     }
 }

@@ -81,7 +81,6 @@ public class GUI implements Runnable {
     //muut itemit
     private JFileChooser filechooser;
     private JFrame optionswindow;
-    private JColorChooser colorchooser;
 
     //optionswindown komponentit!
     //options
@@ -201,8 +200,7 @@ public class GUI implements Runnable {
         //muut itemit
         filechooser = new JFileChooser();
         optionswindow = new JFrame("Options");
-        colorchooser = new JColorChooser();
-
+        
         optionswindow.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
         //actionlistenerien määritys

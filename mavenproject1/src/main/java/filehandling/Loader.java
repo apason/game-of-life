@@ -1,9 +1,12 @@
-package logic;
+package filehandling;
 
+import interfaces.Session;
 import java.io.FileInputStream;
 import java.io.ObjectInputStream;
-
-import interfaces.*;
+import java.util.ArrayList;
+import logic.Rules;
+import logic.World;
+;
 
 /**
  * Mahdollistaa aiemmin pelatun pelin tilan lataamisen tiedostosta
@@ -31,8 +34,13 @@ public class Loader {
     public Session load() throws Exception{
         FileInputStream in = new FileInputStream(filename);
         ObjectInputStream data = new ObjectInputStream(in);
-        Session loaded = (Session) data.readObject();
+        Session loaded = new Session();
+        World world = (World) data.readObject();
+        ArrayList<Rules> rules = (ArrayList<Rules>) data.readObject();
         data.close();
+        
+        loaded.setWorld(world);
+        loaded.setRules(rules);
         
         return loaded;
     }
