@@ -74,8 +74,10 @@ public class GeneralSaveActionListener implements ActionListener{
             frame.getContentPane().add(cancel, BorderLayout.EAST);
             frame.pack();
             frame.setVisible(true);
-            
         }
+        else if(gui.getSession().getWorld()==null)
+            gui.getSession().createWorld(Integer.parseInt(size.getText()));
+        
 
         gui.setIterationsPerStep(Integer.parseInt(iterations.getText()));
         gui.setTimePerStep(Integer.parseInt(steptime.getText()));

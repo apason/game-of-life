@@ -23,6 +23,7 @@ public class RandomizeActionListener implements ActionListener {
     }
     @Override
     public void actionPerformed(ActionEvent ae) {
+        gui.getSession().stop();
         gui.getSession().getWorld().randomizeMap();
         gui.createComponents(gui.getFrame().getContentPane());
         gui.getFrame().pack();
