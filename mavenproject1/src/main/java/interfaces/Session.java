@@ -108,8 +108,8 @@ public class Session implements Runnable{
             }catch(Exception e){
                 System.out.println("wait ei toiminut");;
             }
-            gui.createCells();
-            gui.getFrame().pack();
+            gui.updateCells();
+            //gui.getFrame().pack();
         }
 
     }

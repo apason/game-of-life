@@ -44,7 +44,6 @@ public class EditActionListener implements ActionListener {
         return null;
     }
 
-    //oletetaan että kaikki toimii ja rulesissa tosiaan on buttonin prioriteettiä vastaava solutyyppi
     @Override
     public void actionPerformed(ActionEvent ae) {
 
@@ -75,7 +74,6 @@ public class EditActionListener implements ActionListener {
         gui.getColorMap().remove(del.getPriority());
         gui.getOptionsWindow().pack();
         gui.getOptionsWindow().setVisible(true);
-        
     }
 
 }

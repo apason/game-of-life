@@ -25,9 +25,7 @@ public class NextStepActionListener implements ActionListener {
     public void actionPerformed(ActionEvent ae) {
         gui.getSession().stop();
         gui.getSession().getWorld().evolve();
-        gui.createComponents(gui.getFrame().getContentPane());
-        gui.getFrame().pack();
-        gui.getFrame().setVisible(true);
+        gui.updateCells();
     }
 
 }

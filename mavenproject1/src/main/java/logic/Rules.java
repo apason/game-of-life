@@ -1,7 +1,9 @@
 package logic;
 
-import java.util.ArrayList;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Objects;
 
 /**
  * Sisältää säännöt yhden tyyppiselle solulle. 
@@ -52,6 +54,40 @@ public class Rules implements Comparable<Rules>, Serializable {
     @Override
     public int compareTo(Rules r2){
         return this.priority-r2.getPriority();
+    }
+    @Override
+    public boolean equals(Object o){
+        Rules r2;
+        if(o==null)
+            return false;
+        if(o.getClass()!=this.getClass())
+            return false;
+        r2 = (Rules) o;
+        
+        sort();
+        Collections.sort(r2.getBirth());
+        Collections.sort(r2.getDie());
+        
+        if(!r2.getBirth().equals(birth))
+            return false;
+        if(!r2.getDie().equals(die))
+            return false;
+        return r2.getPriority() == priority;
+    }
+
+    @Override
+    public int hashCode() {
+        sort();
+        int hash = 5;
+        hash = 97 * hash + Objects.hashCode(this.birth);
+        hash = 97 * hash + Objects.hashCode(this.die);
+        hash = 97 * hash + this.priority;
+        return hash;
+    }
+    
+    private void sort(){
+        Collections.sort(die);
+        Collections.sort(birth);
     }
 }
 

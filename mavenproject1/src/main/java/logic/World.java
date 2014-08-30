@@ -167,5 +167,23 @@ public class World implements Serializable {
                     map[i][j].setRules(null);
             }
     }
+    /**
+     * Poistaa mapista solut joiden rulelle ei ole enää viitettä rules listassa.
+     */
+    public void removeExtras(){
+        for(int i=0;i<map.length;i++)
+            for(int j=0;j<map.length;j++){
+                if(!rules.contains(map[i][j].getRules()))
+                    map[i][j].setRules(null);
+            }
+    }
+    /**
+     * Tappaa kaikki solut.
+     */
+    public void clear(){
+        for(int i=0;i<map.length;i++)
+            for(int j=0;j<map.length;j++)
+                map[i][j].setRules(null);
+    }
 }
 

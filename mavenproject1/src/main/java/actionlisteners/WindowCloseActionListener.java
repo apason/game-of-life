@@ -29,6 +29,8 @@ public class WindowCloseActionListener implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent ae) {
 
+        gui.getSession().getWorld().removeExtras();
+
         if (redrawmainwindow != 0) {
             gui.createComponents(gui.getFrame().getContentPane());
             gui.getFrame().pack();

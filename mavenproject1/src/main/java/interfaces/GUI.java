@@ -7,6 +7,7 @@ package interfaces;
 
 import actionlisteners.AddRule;
 import actionlisteners.CellActionListener;
+import actionlisteners.ClearActionListener;
 import actionlisteners.EditActionListener;
 import actionlisteners.GeneralSaveActionListener;
 import actionlisteners.NextStepActionListener;
@@ -39,6 +40,7 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
+import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 import logic.Rules;
 import logic.Utilities;
@@ -79,11 +81,13 @@ public class GUI implements Runnable {
     private JMenuItem start;
     private JMenuItem stop;
     private JMenuItem randomize;
+    private JMenuItem clear;
     //panelin itemit
     JMenuBar[][] table;
     //muut itemit
     private JFileChooser filechooser;
     private JFrame optionswindow;
+    private Color defaultcolor;
 
     //optionswindown komponentit!
     //options
@@ -131,6 +135,7 @@ public class GUI implements Runnable {
         frame = new JFrame("Apa's cellular automata");
         frame.setPreferredSize(new Dimension(650, 650));
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        defaultcolor=UIManager.getColor("JMenubar.background");
 
         createComponents(frame.getContentPane());
 
@@ -161,6 +166,7 @@ public class GUI implements Runnable {
         start = new JMenuItem("Start");
         stop = new JMenuItem("Stop");
         randomize = new JMenuItem("Randomize");
+        clear = new JMenuItem("Clear");
         //panelin itemit
         createCells();
 
@@ -210,6 +216,7 @@ public class GUI implements Runnable {
         start.addActionListener(new StartActionListener(this));
         stop.addActionListener(new StopActionListener(this));
         randomize.addActionListener(new RandomizeActionListener(this));
+        clear.addActionListener(new ClearActionListener(this));
 
         //lisätään komponentit toistensa sisään
         file.add(newsession);
@@ -224,17 +231,50 @@ public class GUI implements Runnable {
         controls.add(start);
         controls.add(stop);
         controls.add(randomize);
+        controls.add(clear);
 
         menu.add(file);
         menu.add(edit);
         menu.add(controls);
 
         container.add(menu, BorderLayout.NORTH);
-        //container.add(panel, BorderLayout.CENTER);
     }
 
+    //updatecells()
+    public void updateCells(){
+        //panelin itemit
+        if (session.getWorld() != null) {
+            int size = session.getWorld().getMap().length;
+            int prior;
+            for (int i = 0; i < size; i++) {
+                for (int j = 0; j < size; j++) {
+                    JMenu item = table[i][j].getMenu(0);
+                    try {
+                        prior = session.getWorld().getMap()[i][j].getRules().getPriority();
+                        item.setText("" + prior);
+                        table[i][j].setBackground(colormap.get(prior));
+                    } catch (Exception e) {
+                        item.setText("0");
+                        table[i][j].setBackground(Color.WHITE);
+                    }
+                    for (Rules r : session.getRules()) {
+                        JMenuItem cellitem = item.getItem(session.getRules().indexOf(r));
+                        cellitem.setText("" + r.getPriority());
+                        cellitem.setBackground(colormap.get(r.getPriority()));
+                        cellitem.removeActionListener(cellitem.getActionListeners()[0]); 
+                        cellitem.addActionListener(new CellActionListener(this, i, j, r));
+                    }
+                    //kuollut solu
+                    JMenuItem cellitem = item.getItem(session.getRules().size());
+                    cellitem.setText("0");
+                    cellitem.removeActionListener(cellitem.getActionListeners()[0]);
+                    cellitem.addActionListener(new CellActionListener(this, i, j, null));
+                }
+            }
+        }
+    }
+    
     public void createCells() {
-        //panel.removeAll();
         if (panel != null) {
             frame.getContentPane().remove(panel);
         }
@@ -256,6 +296,7 @@ public class GUI implements Runnable {
                         table[i][j].setBackground(colormap.get(prior));
                     } catch (Exception e) {
                         item.setText("0");
+                        table[i][j].setBackground(Color.WHITE);
                     }
                     for (Rules r : session.getRules()) {
                         JMenuItem cellitem = new JMenuItem();
@@ -371,7 +412,7 @@ public class GUI implements Runnable {
         bl.addFocusListener(new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) {
-                if(bl.getText().contains("Birth"));
+                if(bl.getText().contains("Birth"))
                     bl.setText("");
             }
             @Override
@@ -381,7 +422,7 @@ public class GUI implements Runnable {
         dl.addFocusListener(new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) {
-                if(dl.getText().contains("Dead"));
+                if(dl.getText().contains("Dead"))
                     dl.setText("");
             }
             @Override
@@ -391,7 +432,7 @@ public class GUI implements Runnable {
         priority.addFocusListener(new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) {
-                if(priority.getText().contains("Priority"));
+                if(priority.getText().contains("Priority"))
                     priority.setText("");
             }
             @Override
@@ -440,6 +481,7 @@ public class GUI implements Runnable {
     }
 
     private void openActionPerformed(ActionEvent evt) {
+        session.stop();
         filechooser.setDialogTitle("Open");
         filechooser.setApproveButtonText("Open");
         int returnVal = filechooser.showOpenDialog(frame);
@@ -486,7 +528,8 @@ public class GUI implements Runnable {
     }
 
     private void optionsActionPerformed(ActionEvent evt) {
-
+        
+        session.stop();
         optionswindow.setPreferredSize(new Dimension(500, 350));
 
         createOptionsComponents(optionswindow.getContentPane());
