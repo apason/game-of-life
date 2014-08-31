@@ -1,3 +1,5 @@
+package logic;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -12,19 +14,20 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import java.util.ArrayList;
 
-import logic.*;
 
 /**
  *
  * @author apa
  */
-public class RulesTest {
+public class CellTest {
     
     Rules rules;
+    Rules rules2;
+    Cell cell;
     ArrayList<Integer> birth;
     ArrayList<Integer> die;
     
-    public RulesTest() {
+    public CellTest() {
     }
     
     @BeforeClass
@@ -47,6 +50,8 @@ public class RulesTest {
         die.add(7);
         die.add(8);
         rules = new Rules(birth,die,1);
+        rules2= new Rules(new ArrayList<Integer>(), new ArrayList<Integer>(),2);
+        cell=new Cell(rules);
     }
     
     @After
@@ -58,23 +63,22 @@ public class RulesTest {
     //
     // @Test
     // public void hello() {}
+    
     @Test
     public void constructorWorksProperly(){
-        assertEquals(birth,rules.getBirth());
-        assertEquals(die,rules.getDie());
+        assertEquals(rules,cell.getRules());
     }
     
     @Test
-    public void priorityGetterWorksProperly(){
-        assertEquals(1,rules.getPriority());
+    public void settersAndGettersWorksProperly(){
+        cell.setRules(rules2);
+        assertEquals(rules2,cell.getRules());
     }
     
     @Test
-    public void compareToWorksProperly(){
-        Rules rules2 = new Rules(null,null,2);
-        Rules rules3 = new Rules(null,null,1);
-        assertTrue(rules.compareTo(rules2)<0);
-        assertTrue(rules.compareTo(rules3)==0);
+    public void copyWorksProperly(){
+        assertEquals(rules,cell.copy().getRules());
     }
 }
+
 

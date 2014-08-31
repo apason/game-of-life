@@ -8,20 +8,31 @@ import java.util.concurrent.TimeUnit;
 import logic.*;
 
 /**
- * Luokka sisältää kaiken tallennukseen/lataamisen tarvittavan datan ja
- * toimii osana käyttöliittymää
+ * Luokka sisältää kaiken tallennukseen/lataamisen tarvittavan datan ja toimii
+ * osana käyttöliittymää
+ *
  * @author apa
  */
-public class Session implements Runnable{
+public class Session implements Runnable {
 
-    /** Sisältää tiedon onko start() metodi suorituksessa */
+    /**
+     * Sisältää tiedon onko start() metodi suorituksessa
+     */
     private boolean running;
-    /** Sessioniin liittyvä World olio. Suurin osa (esim. evolve()) simulaatiosta tapahtuu tämän olion metodeilla */
+    /**
+     * Sessioniin liittyvä World olio. Suurin osa (esim. evolve()) simulaatiosta
+     * tapahtuu tämän olion metodeilla
+     */
     private World world;
-    /** Tieto kaikista eri solutyypeistä/"lajeista", annetaan parametriksi Worldin konstruktorille. */
+    /**
+     * Tieto kaikista eri solutyypeistä/"lajeista", annetaan parametriksi
+     * Worldin konstruktorille.
+     */
     private ArrayList<Rules> rules;
-    /** Sessionin tunnettava gui koska rajapinnan Runnable metodi
-     *  Run tarvitsee tämän tiedon eikä sille voi antaa parametrejä. */
+    /**
+     * Sessionin tunnettava gui koska rajapinnan Runnable metodi Run tarvitsee
+     * tämän tiedon eikä sille voi antaa parametrejä.
+     */
     private GUI gui;
 
     /**
@@ -30,7 +41,7 @@ public class Session implements Runnable{
     public Session(GUI gui) {
         running = false;
         rules = new ArrayList<Rules>();
-        this.gui=gui;
+        this.gui = gui;
     }
 
     public boolean getRunning() {
@@ -48,13 +59,19 @@ public class Session implements Runnable{
     public void setWorld(World world) {
         this.world = world;
     }
-    
-    public void setRules(ArrayList<Rules> rules){
-        this.rules=rules;
+
+    public void setRules(ArrayList<Rules> rules) {
+        this.rules = rules;
+    }
+
+    //testejä varten
+    public void setRunning(boolean state) {
+        running = state;
     }
 
     /**
      * Luo ja alustaa World olion
+     *
      * @param size maailmalle annettavan solumäärän neliöjuuri
      */
     public void createWorld(int size) {
@@ -64,6 +81,7 @@ public class Session implements Runnable{
     /**
      * Lisää rules listaan uuden Rules olion (mikäli se ei ole ristiriidassa
      * itsensä tai muiden kanssa)
+     *
      * @param rule lisättävä sääntö
      * @throws RuntimeException jos lisättävä Rules ei ole validi
      */
@@ -88,6 +106,7 @@ public class Session implements Runnable{
 
     /**
      * Poistaa rules listalta annetun Rules olion
+     *
      * @param rule poistettava sääntö
      */
     public void removeRule(Rules rule) {
@@ -101,22 +120,17 @@ public class Session implements Runnable{
     public void run() {
         running = true;
         while (running) {
-            for(int i=0;i<gui.getIterationsPerStep(); i++)
+            for (int i = 0; i < gui.getIterationsPerStep(); i++) {
                 world.evolve();
-            try{
-            TimeUnit.MILLISECONDS.sleep(gui.getTimePerStep());
-            }catch(Exception e){
+            }
+            try {
+                TimeUnit.MILLISECONDS.sleep(gui.getTimePerStep());
+            } catch (Exception e) {
                 System.out.println("wait ei toiminut");;
             }
             gui.updateCells();
-            //gui.getFrame().pack();
         }
 
-    }
-
-    // vain testejä varten
-    public void setRunning(boolean state) {
-        running = state;
     }
 
     /**
@@ -128,6 +142,7 @@ public class Session implements Runnable{
 
     /**
      * Tallentaa senhetkisen simulaation tiedostoon
+     *
      * @param filename tiedosto johon tallennus tapahtuu
      */
     public void save(String filename) {
@@ -136,12 +151,12 @@ public class Session implements Runnable{
             saver.save();
         } catch (Exception e) {
             System.out.println("Error: cannot write to file");
-            e.printStackTrace();
         }
     }
 
     /**
      * Lataa vanhan simulaation tiedostosta
+     *
      * @param filename tiedosto josta lataus tapahtuu
      */
     public void load(String filename) {
@@ -149,42 +164,50 @@ public class Session implements Runnable{
         Session loaded;
         try {
             loaded = loader.load();
-            this.rules=loaded.rules;
+            this.rules = loaded.rules;
             this.world = loaded.world;
-            running=false;
+            running = false;
         } catch (Exception e) {
             System.out.println("Error: cannot read from file");
-            e.printStackTrace();
         }
 
     }
-    
+
     /**
-     * Vain testejä varten. Ei voi vertailla kahta mielivaltaista Session oliota!
+     * Vain testejä varten. Ei voi vertailla kahta mielivaltaista Session
+     * oliota!
+     *
      * @param o mihin verrataan
      * @return true jos kyseessä sama olio, muuten false
      */
     @Override
-    public boolean equals(Object o){
+    public boolean equals(Object o) {
         Session s;
-        if(o == null)
+        if (o == null) {
             return false;
-        if(o.getClass()!=this.getClass())
+        }
+        if (o.getClass() != this.getClass()) {
             return false;
-        s=(Session) o;
-        if ((s.getWorld()==null && this.getWorld()!=null) || (s.getRules() == null && this.getRules()!=null))
+        }
+        s = (Session) o;
+        if ((s.getWorld() == null && this.getWorld() != null) || (s.getRules() == null && this.getRules() != null)) {
             return false;
-        if((s.getRules()==null&&this.getRules()!=null))
+        }
+        if ((s.getRules() == null && this.getRules() != null)) {
             return false;
-        if(this.getRules()!=null)
-            if(this.getRules().size()!= s.getRules().size())
+        }
+        if (this.getRules() != null) {
+            if (this.getRules().size() != s.getRules().size()) {
                 return false;
-        if(this.getWorld()!=null){
-            if(this.getWorld().getMap().length!=s.getWorld().getMap().length)
+            }
+        }
+        if (this.getWorld() != null) {
+            if (this.getWorld().getMap().length != s.getWorld().getMap().length) {
                 return false;
+            }
         }
         return true;
-        
+
     }
 
     @Override
@@ -194,5 +217,5 @@ public class Session implements Runnable{
         hash = 37 * hash + this.world.getMap().length;
         return hash;
     }
-    
+
 }

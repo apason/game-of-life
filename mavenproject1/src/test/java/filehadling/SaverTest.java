@@ -1,3 +1,5 @@
+package filehadling;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -18,25 +20,26 @@ import org.junit.Test;
  *
  * @author apa
  */
-public class LoaderTest {
-
+public class SaverTest {
+    
     Session session;
-    Rules rule1;
+        Rules rule1;
 
-    ArrayList<Integer> r1dl;
-    ArrayList<Integer> r1bl;
-
-    public LoaderTest() {
+        ArrayList<Integer> r1dl;
+        ArrayList<Integer> r1bl;
+    
+    public SaverTest() {
     }
-
+    
     @BeforeClass
     public static void setUpClass() {
+        
     }
-
+    
     @AfterClass
     public static void tearDownClass() {
     }
-
+    
     @Before
     public void setUp() {
         session = new Session(null);
@@ -52,42 +55,43 @@ public class LoaderTest {
 
         rule1 = new Rules(r1bl, r1dl, 1);
 
-        try {
+        try{
             session.addRule(rule1);
-        } catch (Exception e) {
+        } catch (Exception e){
             System.out.println(e.toString());
             return;
         }
-
+        
         session.createWorld(3);
-
+        
         session.getWorld().getMap()[0][1].setRules(rule1);
         session.getWorld().getMap()[1][1].setRules(rule1);
         session.getWorld().getMap()[2][1].setRules(rule1);
-
-        for (int i = 0; i < 5; i++) {
+        
+        for(int i=0;i<5;i++){
             session.getWorld().printWorld();
             System.out.println("");
             session.getWorld().evolve();
         }
-
-        for (int i = 0; i < 5; i++) {
+        
+        for(int i=0;i<5;i++){
             session.getWorld().printWorld();
             System.out.println("");
             session.getWorld().evolve();
         }
+        
     }
-
+    
     @After
     public void tearDown() {
     }
 
     @Test
-    public void loadWorksProperly() {
-        Session session2 = new Session(null);
+    public void saveWorksProperly(){
+        Session session2=new Session(null);
         session.save("testipaska");
         session2.load("testipaska");
         assertTrue(session.equals(session2));
     }
-
+    
 }

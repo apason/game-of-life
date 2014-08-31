@@ -1,3 +1,4 @@
+package logic;
 
 import java.util.ArrayList;
 import logic.Utilities;
@@ -31,20 +32,20 @@ import org.junit.Test;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 /**
  *
  * @author apa
  */
 public class UtilitiesTest {
-    
+
     @Test
-    public void correctFilenameWorksProperly(){
+    public void correctFilenameWorksProperly() {
         assertEquals("testfilename.dat", Utilities.correctFilename("testfilename.dat"));
         assertEquals("testfilename.dat", Utilities.correctFilename("testfilename"));
     }
+
     @Test
-    public void correctConditionListWorksProperly(){
+    public void correctConditionListWorksProperly() {
         assertTrue(correctConditionList("1,2,3,4"));
         assertFalse(correctConditionList("1,2,3,4,"));
         assertFalse(correctConditionList("100"));
@@ -53,8 +54,9 @@ public class UtilitiesTest {
         assertTrue(correctConditionList("5,10,66"));
         assertTrue(correctConditionList("0,9,10,29,20,99"));
     }
+
     @Test
-    public void correctSizeWorksProperly(){
+    public void correctSizeWorksProperly() {
         assertTrue(correctSize("3"));
         assertTrue(correctSize("2"));
         assertTrue(correctSize("9"));
@@ -71,9 +73,9 @@ public class UtilitiesTest {
         assertFalse(correctSize("3000"));
         assertFalse(correctSize("2001"));
     }
-    
+
     @Test
-    public void correctSteptimeWorksProperly(){
+    public void correctSteptimeWorksProperly() {
         assertTrue(correctSteptime("1"));
         assertTrue(correctSteptime("9"));
         assertTrue(correctSteptime("10"));
@@ -87,9 +89,9 @@ public class UtilitiesTest {
         assertFalse(correctSteptime("asd"));
         assertFalse(correctSteptime("2000"));
     }
-    
+
     @Test
-    public void correctIterationsWorksProperly(){
+    public void correctIterationsWorksProperly() {
         assertTrue(correctIterations("1"));
         assertTrue(correctIterations("9"));
         assertTrue(correctIterations("10"));
@@ -102,9 +104,9 @@ public class UtilitiesTest {
         assertFalse(correctIterations("1000"));
         assertFalse(correctIterations("5391"));
     }
-    
-    @Test 
-    public void listToStrinWorksProperly(){
+
+    @Test
+    public void listToStrinWorksProperly() {
         ArrayList<Integer> list1 = new ArrayList<Integer>();
         list1.add(0);
         list1.add(5);
@@ -113,5 +115,5 @@ public class UtilitiesTest {
         list1.add(73);
         assertEquals("0,5,2,73", listToString(list1));
     }
-    
+
 }
