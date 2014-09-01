@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package logic;
 
 import java.util.ArrayList;
@@ -44,6 +39,15 @@ public class Utilities {
         return s.matches("([0-9],|[1-9][0-9],)*([0-9]|[1-9][0-9])");
     }
 
+    /**
+     * Tarkistaa että prioriteeti on validi.
+     * 
+     * @param s Tarkistettava prioriteetti
+     * @return True jos String sisältää luvut 0-12
+     */
+    public static boolean correctPriority(String s){
+        return s.matches("[0-9]|10|11|12");
+    }
     /**
      * Tarkistaa että annettu merkkijono vastaa sallittua kokoa.
      *

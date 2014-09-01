@@ -1,28 +1,16 @@
 package logic;
 
 import java.util.ArrayList;
-import logic.Utilities;
 import static logic.Utilities.correctConditionList;
 import static logic.Utilities.correctIterations;
+import static logic.Utilities.correctPriority;
 import static logic.Utilities.correctSize;
 import static logic.Utilities.correctSteptime;
 import static logic.Utilities.listToString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertTrue;
 import org.junit.Test;
@@ -53,6 +41,21 @@ public class UtilitiesTest {
         assertFalse(correctConditionList("1,3,b,5"));
         assertTrue(correctConditionList("5,10,66"));
         assertTrue(correctConditionList("0,9,10,29,20,99"));
+    }
+    
+    @Test
+    public void correctPriorityWorksProperly(){
+        assertTrue(correctPriority("0"));
+        assertTrue(correctPriority("10"));
+        assertTrue(correctPriority("1"));
+        assertTrue(correctPriority("9"));
+        assertTrue(correctPriority("11"));
+        assertTrue(correctPriority("12"));
+        assertFalse(correctPriority("-1"));
+        assertFalse(correctPriority("13"));
+        assertFalse(correctPriority("99"));
+        assertFalse(correctPriority("00"));
+        assertFalse(correctPriority("asd"));
     }
 
     @Test

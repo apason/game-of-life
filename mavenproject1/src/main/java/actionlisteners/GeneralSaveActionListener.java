@@ -40,9 +40,8 @@ public class GeneralSaveActionListener implements ActionListener{
     
     @Override
     public void actionPerformed(ActionEvent ae) {
-        Integer d = 0;
         if(!Utilities.correctSize(size.getText())){
-            size.setText("Error: Size must be integer [2,999]");
+            size.setText("Error: Size must be integer [2,99]");
             return;
         }
         
@@ -73,6 +72,7 @@ public class GeneralSaveActionListener implements ActionListener{
             frame.getContentPane().add(ok, BorderLayout.WEST);
             frame.getContentPane().add(cancel, BorderLayout.EAST);
             frame.pack();
+            frame.setLocationRelativeTo(gui.getOptionsWindow());
             frame.setVisible(true);
         }
         else if(gui.getSession().getWorld()==null)

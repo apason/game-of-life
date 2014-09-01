@@ -40,6 +40,10 @@ public class AddRule implements ActionListener{
             gui.getDl().setText("Syntax error: list conditions (integers) separated with comma.");
             return;
         }
+        if(!Utilities.correctPriority(gui.getPriority().getText())){
+            gui.getPriority().setText("Syntax error: priority should be integer [0,12]");
+            return;
+        }
         
         ArrayList<Integer> bl = new ArrayList<Integer>();
         ArrayList<Integer> dl = new ArrayList<Integer>();
