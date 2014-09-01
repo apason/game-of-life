@@ -1,9 +1,6 @@
 package interfaces;
 
 import actionlisteners.CellActionListener;
-import actionlisteners.EditActionListener;
-import actionlisteners.GeneralSaveActionListener;
-import actionlisteners.WindowCloseActionListener;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -13,7 +10,9 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.HashMap;
+import javax.swing.AbstractButton;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -593,18 +592,46 @@ public class GUI implements Runnable {
         });
         
         add.addActionListener(new java.awt.event.ActionListener() {
-
             @Override
             public void actionPerformed(ActionEvent evt) {
                 addActionPerformed(evt);
             }
         });
-        editbutton.addActionListener(new EditActionListener(this, 1));
-        remove.addActionListener(new EditActionListener(this, 0));
-        rulesok.addActionListener(new WindowCloseActionListener(this, optionswindow, 1));
-        generalsave.addActionListener(new GeneralSaveActionListener(this, size, steptime, iterations));
-        generalok.addActionListener(new WindowCloseActionListener(this, optionswindow, 1));
-
+        
+        editbutton.addActionListener(new java.awt.event.ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                editActionListener(ae);
+            }
+        });
+        remove.addActionListener(new java.awt.event.ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                removeActionListener(ae);
+            }
+        });
+        
+        rulesok.addActionListener(new java.awt.event.ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                wcActionPerformed(ae, optionswindow);
+            }
+        });
+        
+        generalsave.addActionListener(new java.awt.event.ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                generalsaveActionPerformed(ae);
+            }
+        });
+        
+        generalok.addActionListener(new java.awt.event.ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                wcActionPerformed(ae, optionswindow);
+            }
+        });
+        
         //focuslistenerit
         bl.addFocusListener(new FocusListener() {
             @Override
@@ -752,8 +779,6 @@ public class GUI implements Runnable {
     private void exitActionPerformed(ActionEvent evt) {
         System.exit(0);
     }
-    
-    
 
     /**
      * options painikkeen suorittama koodi. 
@@ -795,6 +820,61 @@ public class GUI implements Runnable {
     private void viewprioritiesActionPerformed(ActionEvent evt){
         sp = sp != true;
         updateCells();
+    }
+    
+    private void generalsaveActionPerformed(ActionEvent evt){
+        if(!Utilities.correctSize(size.getText())){
+            size.setText("Error: Size must be integer [2,99]");
+            return;
+        }
+        
+        if(!Utilities.correctIterations(iterations.getText())){
+            iterations.setText("Error: Value must be integer: [1,999");
+            return;
+        }
+        
+        if(!Utilities.correctSteptime(steptime.getText())){
+            steptime.setText("Error: Value must be integer [1,1999]");
+            return;
+        }
+        
+        if(session.getWorld()!=null && session.getWorld().getMap().length!=Integer.parseInt(size.getText())){
+            //varoitus ylikirjoituksesta
+            final JFrame frame = new JFrame("Owerwrite?");
+            JLabel label = new JLabel();
+            JButton ok = new JButton();
+            JButton cancel = new JButton();
+            label.setText("To change the size you will lost current world!");
+            ok.setText("Ok");
+            cancel.setText("Cancel");
+            
+            ok.addActionListener(new java.awt.event.ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent ae) {
+                    generalSaveConfirmActionPerformed(ae, frame);
+                }
+            });
+
+            cancel.addActionListener(new java.awt.event.ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent ae) {
+                    cancelActionPerformed(ae, frame);
+                }
+            });
+            
+            frame.getContentPane().add(label, BorderLayout.NORTH);
+            frame.getContentPane().add(ok, BorderLayout.WEST);
+            frame.getContentPane().add(cancel, BorderLayout.EAST);
+            frame.pack();
+            frame.setLocationRelativeTo(optionswindow);
+            frame.setVisible(true);
+        }
+        else if(session.getWorld()==null)
+            session.createWorld(Integer.parseInt(size.getText()));
+        
+
+        setIterationsPerStep(Integer.parseInt(iterations.getText()));
+        setTimePerStep(Integer.parseInt(steptime.getText()));
     }
     
     /**
@@ -842,14 +922,20 @@ public class GUI implements Runnable {
             getOptionsWindow().pack();
             getOptionsWindow().setVisible(true);
         }catch (Exception e){
-            JFrame frame = new JFrame("Error");
+            final JFrame frame;
+            frame = new JFrame("Error");
             JLabel label = new JLabel();
             JButton button = new JButton();
             label.setText("Unable to add rule:\n" + e.toString());
             button.setText("Ok");
             
-            button.addActionListener(new WindowCloseActionListener(this,frame,0));
-            
+            button.addActionListener(new java.awt.event.ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent ae) {
+                    wcActionPerformed(ae, frame);
+                }
+            });
+                        
             frame.getContentPane().add(label, BorderLayout.NORTH);
             frame.getContentPane().add(button);
             frame.pack();
@@ -858,6 +944,77 @@ public class GUI implements Runnable {
         }
     }
     
+    private void editActionListener(ActionEvent evt){
+        String s = getSelectedButtonText(rulesgroup);
+        Rules del = null;
+        
+        if(s==null)
+            return;
+        
+        String[] st = s.split(" ");
+        int d = Integer.parseInt(st[1]);
+        for (Rules r : session.getRules()) {
+            if (r.getPriority() == d) {
+                del = r;
+                break;
+            }
+        }
+        
+        session.getRules().remove(del);
+        createOptionsComponents();
+        if (del!=null) {
+            bl.setText(Utilities.listToString(del.getBirth()));
+            dl.setText(Utilities.listToString(del.getDie()));
+            priority.setText(del.getPriority() + "");
+            color.setBackground(colormap.get(del.getPriority()));
+        }
+        colormap.remove(del.getPriority());
+        optionswindow.pack();
+        optionswindow.setVisible(true);
+    }
+    
+    private void removeActionListener(ActionEvent evt){
+        String s = getSelectedButtonText(rulesgroup);
+        Rules del = null;
+        
+        if(s==null)
+            return;
+        
+        String[] st = s.split(" ");
+        int d = Integer.parseInt(st[1]);
+        for (Rules r : session.getRules()) {
+            if (r.getPriority() == d) {
+                del = r;
+                break;
+            }
+        }
+        
+        session.getRules().remove(del);
+        createOptionsComponents();
+        colormap.remove(del.getPriority());
+        optionswindow.pack();
+        optionswindow.setVisible(true);
+    }
+    
+    private void generalSaveConfirmActionPerformed(ActionEvent ae, JFrame frame){
+       session.createWorld(Integer.parseInt(size.getText()));
+        frame.setVisible(false);
+    }
+    
+    private void cancelActionPerformed(ActionEvent ae, JFrame frame){
+        frame.setVisible(false);
+    }
+    
+    private void wcActionPerformed(ActionEvent ae, JFrame frame){
+        session.getWorld().removeExtras();
+
+            createComponents();
+            getFrame().pack();
+            getFrame().setVisible(true);
+       
+
+        frame.setVisible(false);
+    }
     
     
     /**
@@ -923,6 +1080,18 @@ public class GUI implements Runnable {
         errorwindow.setLocationRelativeTo(frame);
         errorwindow.setAlwaysOnTop(true);
         errorwindow.setVisible(true);
+    }
+    
+    private String getSelectedButtonText(ButtonGroup buttonGroup) {
+        for (Enumeration<AbstractButton> buttons = buttonGroup.getElements(); buttons.hasMoreElements();) {
+            AbstractButton button = buttons.nextElement();
+
+            if (button.isSelected()) {
+                return button.getText();
+            }
+        }
+
+        return null;
     }
 }
 
