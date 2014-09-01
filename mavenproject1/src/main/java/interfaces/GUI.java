@@ -1,14 +1,8 @@
 package interfaces;
 
-import actionlisteners.AddRule;
 import actionlisteners.CellActionListener;
-import actionlisteners.ClearActionListener;
 import actionlisteners.EditActionListener;
 import actionlisteners.GeneralSaveActionListener;
-import actionlisteners.NextStepActionListener;
-import actionlisteners.RandomizeActionListener;
-import actionlisteners.StartActionListener;
-import actionlisteners.StopActionListener;
 import actionlisteners.WindowCloseActionListener;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -35,7 +29,6 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
-import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 import logic.Rules;
 import logic.Utilities;
@@ -420,11 +413,41 @@ public class GUI implements Runnable {
             }
         });
 
-        nextstep.addActionListener(new NextStepActionListener(this));
-        start.addActionListener(new StartActionListener(this));
-        stop.addActionListener(new StopActionListener(this));
-        randomize.addActionListener(new RandomizeActionListener(this));
-        clear.addActionListener(new ClearActionListener(this));
+        nextstep.addActionListener(new java.awt.event.ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                nextstepActionListener(ae);
+            }
+        });
+        
+        start.addActionListener(new java.awt.event.ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                startACtionPerformed(ae);
+            }
+        });
+        
+        stop.addActionListener(new java.awt.event.ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                stopACtionPerformed(ae);
+            }
+        });
+        
+        randomize.addActionListener(new java.awt.event.ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                randomizeActionPerformed(ae);
+            }
+        });
+        
+        clear.addActionListener(new java.awt.event.ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                clearActionPerformed(evt);
+            }
+        });
         
         viewpriorities.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -569,7 +592,13 @@ public class GUI implements Runnable {
             }
         });
         
-        add.addActionListener(new AddRule(this));
+        add.addActionListener(new java.awt.event.ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                addActionPerformed(evt);
+            }
+        });
         editbutton.addActionListener(new EditActionListener(this, 1));
         remove.addActionListener(new EditActionListener(this, 0));
         rulesok.addActionListener(new WindowCloseActionListener(this, optionswindow, 1));
@@ -680,8 +709,8 @@ public class GUI implements Runnable {
         int returnVal = filechooser.showOpenDialog(frame);
         if (returnVal == javax.swing.JFileChooser.APPROVE_OPTION) {
             File file = filechooser.getSelectedFile();
-            session.load(Utilities.correctFilename(file.getName()));
-            filename = Utilities.correctFilename(file.getName());
+            session.load(file.getAbsolutePath());
+            filename = file.getAbsolutePath();
         } else {
             System.out.println("File was not opened!\n" + evt.getActionCommand());
         }
@@ -710,21 +739,12 @@ public class GUI implements Runnable {
         int returnVal = filechooser.showOpenDialog(frame);
         if (returnVal == javax.swing.JFileChooser.APPROVE_OPTION) {
             File file = filechooser.getSelectedFile();
-            session.save(Utilities.correctFilename(file.getName()));
+            session.save(Utilities.correctFilename(file.getAbsolutePath()));
         } else {
             System.out.println("File was not saved!\n" + evt.getActionCommand());
         }
     }
     
-    /**
-     * color painikkeen suorittama koodi.
-     * @param evt Kyseinen ActionEvent
-     */
-    private void colorActionPerformed(ActionEvent evt) {
-        Color rulescolor = JColorChooser.showDialog(color, "Choose cells color", color.getBackground());
-        color.setBackground(rulescolor);
-    }
-
     /**
      * exit painikkeen suorittama koodi.
      * @param evt Kyseinen ActionEvent
@@ -732,6 +752,8 @@ public class GUI implements Runnable {
     private void exitActionPerformed(ActionEvent evt) {
         System.exit(0);
     }
+    
+    
 
     /**
      * options painikkeen suorittama koodi. 
@@ -742,10 +764,101 @@ public class GUI implements Runnable {
         createOptionsComponents();
     }
     
-    private void viewprioritiesActionPerformed(ActionEvent evt){
-        sp = sp == true ? false : true;
+    private void nextstepActionListener(ActionEvent evt){
+        session.stop();
+        session.getWorld().evolve();
         updateCells();
     }
+    
+    private void startACtionPerformed(ActionEvent evt){
+        if(!session.getRunning()){
+            Thread thread = new Thread(session);
+            thread.start();
+        }
+    }
+    
+    private void stopACtionPerformed(ActionEvent evt){
+        session.stop();
+    }
+     
+    private void randomizeActionPerformed(ActionEvent evt){
+        session.stop();
+        session.getWorld().randomizeMap();
+        updateCells();
+    }
+    
+    private void clearActionPerformed(ActionEvent evt){
+        session.getWorld().clear();
+        updateCells();
+    }
+    
+    private void viewprioritiesActionPerformed(ActionEvent evt){
+        sp = sp != true;
+        updateCells();
+    }
+    
+    /**
+     * color painikkeen suorittama koodi.
+     * @param evt Kyseinen ActionEvent
+     */
+    private void colorActionPerformed(ActionEvent evt) {
+        Color rulescolor = JColorChooser.showDialog(color, "Choose cells color", color.getBackground());
+        color.setBackground(rulescolor);
+    }
+    
+    
+    private void addActionPerformed(ActionEvent evt){
+        if(!Utilities.correctConditionList(bl.getText())){
+            bl.setText("Syntax error: list conditions (integers) separated with comma.");
+            return;
+        }
+        if(!Utilities.correctConditionList(dl.getText())){
+            dl.setText("Syntax error: list conditions (integers) separated with comma.");
+            return;
+        }
+        if(!Utilities.correctPriority(priority.getText())){
+            priority.setText("Syntax error: priority should be integer [0,12]");
+            return;
+        }
+        
+        ArrayList<Integer> bl = new ArrayList<Integer>();
+        ArrayList<Integer> dl = new ArrayList<Integer>();
+        Rules rule;
+        int prior = Integer.parseInt(priority.getText());
+        String[] tmp = this.bl.getText().split(",");
+        for(String s : tmp)
+            bl.add(Integer.parseInt(s));
+        tmp = this.dl.getText().split(",");
+        for(String s : tmp)
+            dl.add(Integer.parseInt(s));
+        this.bl.setText("");
+        this.dl.setText("");
+        priority.setText("");
+        rule=new Rules(bl,dl,prior);
+        try{
+           session.addRule(rule);
+            colormap.put(prior, color.getBackground());
+            createOptionsComponents();
+            getOptionsWindow().pack();
+            getOptionsWindow().setVisible(true);
+        }catch (Exception e){
+            JFrame frame = new JFrame("Error");
+            JLabel label = new JLabel();
+            JButton button = new JButton();
+            label.setText("Unable to add rule:\n" + e.toString());
+            button.setText("Ok");
+            
+            button.addActionListener(new WindowCloseActionListener(this,frame,0));
+            
+            frame.getContentPane().add(label, BorderLayout.NORTH);
+            frame.getContentPane().add(button);
+            frame.pack();
+            frame.setVisible(true);
+            
+        }
+    }
+    
+    
     
     /**
      * Päivittää solutaulukon.
@@ -788,6 +901,28 @@ public class GUI implements Runnable {
                 }
             }
         }
+    }
+    
+    /**
+     * Luo uuden ikkunan ja errormessagelle
+     * @param message Ikkunassa näytettävä viesti
+     */
+    public void createErrorWindow(String message){
+        final JFrame errorwindow = new JFrame("Error");
+        errorwindow.setLayout(new BorderLayout());
+        JLabel error = new JLabel("Error: " + message);
+        errorwindow.getContentPane().add(error,BorderLayout.NORTH);
+        JButton b = new JButton("Ok");
+        b.addActionListener(new java.awt.event.ActionListener(){
+            public void actionPerformed(java.awt.event.ActionEvent evt){
+                errorwindow.setVisible(false);
+            }
+        });
+        errorwindow.add(b,BorderLayout.SOUTH);
+        errorwindow.pack();
+        errorwindow.setLocationRelativeTo(frame);
+        errorwindow.setAlwaysOnTop(true);
+        errorwindow.setVisible(true);
     }
 }
 

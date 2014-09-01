@@ -151,6 +151,7 @@ public class Session implements Runnable {
             saver.save();
         } catch (Exception e) {
             System.out.println("Error: cannot write to file");
+            gui.createErrorWindow( e.getMessage());
         }
     }
 
@@ -168,7 +169,8 @@ public class Session implements Runnable {
             this.world = loaded.world;
             running = false;
         } catch (Exception e) {
-            System.out.println("Error: cannot read from file");
+            System.out.println("Error: cannot read from file\n" + e.getMessage());
+            gui.createErrorWindow( e.getMessage());
         }
 
     }
