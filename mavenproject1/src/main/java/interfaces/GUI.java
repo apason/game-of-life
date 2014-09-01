@@ -23,6 +23,7 @@ import java.util.HashMap;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JColorChooser;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -65,6 +66,9 @@ public class GUI implements Runnable {
      *  Tätä tietoa ei tallenneta tiedostoon.
      */
     private HashMap<Integer, Color> colormap;
+    
+    /** purkka ratkaisu viewprioritiesin tilan säilyttämiseksi kun pääkomponentit tehdään uudestaan */
+    private boolean sp;
 
     //main windown komponentit!
     /** Ohjelman pääikkuna */
@@ -81,6 +85,8 @@ public class GUI implements Runnable {
     private JMenu edit;
     /** päämenun controls valikko. Sisältää toiminnot next step, start, stop, randomize ja clear */
     private JMenu controls;
+    /** päämenun view valikko */
+    private JMenu view;
     //file menun itemit
     /** file menun new painike. Luo uuden Sessionin oletusasetuksilla */
     private JMenuItem newsession;
@@ -108,6 +114,8 @@ public class GUI implements Runnable {
     private JMenuItem randomize;
     /** controls menun clear painike. Muuttaa kaikki maailman solut kuolleiksi. */
     private JMenuItem clear;
+    //view menun itemit
+    private JCheckBoxMenuItem viewpriorities;
     //panelin itemit
     /** Jokaiselle solulle oma JMenuBar */
     JMenuBar[][] table;
@@ -186,6 +194,7 @@ public class GUI implements Runnable {
         iterationsperstep = 1;
         timeperstep = 350;
         colormap = new HashMap<Integer, Color>();
+        sp=true;
     }
 
     public void setTimePerStep(int timeperstep) {
@@ -249,7 +258,7 @@ public class GUI implements Runnable {
         createWindows();
 
         createComponents();
-
+        
     }
 
     /**
@@ -291,6 +300,7 @@ public class GUI implements Runnable {
         file = new JMenu("File");
         edit = new JMenu("Edit");
         controls = new JMenu("Controls");
+        view = new JMenu("View");
         //file menun itemit
         newsession = new JMenuItem("New");
         open = new JMenuItem("Open");
@@ -305,6 +315,9 @@ public class GUI implements Runnable {
         stop = new JMenuItem("Stop");
         randomize = new JMenuItem("Randomize");
         clear = new JMenuItem("Clear");
+        //view menun itemit
+        viewpriorities = new JCheckBoxMenuItem("View priorities");   
+        viewpriorities.setSelected(sp);
     }
 
     /**
@@ -321,6 +334,7 @@ public class GUI implements Runnable {
             int prior;
             table = new JMenuBar[size][size];
             panel.setLayout(new GridLayout(size, size));
+            boolean viewprioritiess = viewpriorities.isSelected();
             for (int i = 0; i < size; i++) {
                 for (int j = 0; j < size; j++) {
                     table[i][j] = new JMenuBar();
@@ -328,10 +342,12 @@ public class GUI implements Runnable {
                     item.setPreferredSize(new Dimension(300, 300));
                     try {
                         prior = session.getWorld().getMap()[i][j].getRules().getPriority();
-                        item.setText("" + prior);
+                        if(viewprioritiess)
+                            item.setText("" + prior);
                         table[i][j].setBackground(colormap.get(prior));
                     } catch (Exception e) {
-                        item.setText(".");
+                        if(viewprioritiess)
+                            item.setText(".");
                         table[i][j].setBackground(Color.WHITE);
                     }
                     for (Rules r : session.getRules()) {
@@ -343,11 +359,11 @@ public class GUI implements Runnable {
                     }
                     //kuollut solu
                     JMenuItem cellitem = new JMenuItem();
-                    cellitem.setText(".");
+                    cellitem.setText("Dead");
                     cellitem.addActionListener(new CellActionListener(this, i, j, null));
                     item.add(cellitem);
                     table[i][j].add(item);
-                    panel.add(table[i][j]); //exception wtf
+                    panel.add(table[i][j]);
 
                 }
             }
@@ -409,6 +425,12 @@ public class GUI implements Runnable {
         stop.addActionListener(new StopActionListener(this));
         randomize.addActionListener(new RandomizeActionListener(this));
         clear.addActionListener(new ClearActionListener(this));
+        
+        viewpriorities.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                viewprioritiesActionPerformed(evt);
+            }
+        });
     }
 
     /**
@@ -428,10 +450,13 @@ public class GUI implements Runnable {
         controls.add(stop);
         controls.add(randomize);
         controls.add(clear);
+        
+        view.add(viewpriorities);
 
         menu.add(file);
         menu.add(edit);
         menu.add(controls);
+        menu.add(view);
 
         frame.getContentPane().add(menu, BorderLayout.NORTH);
 
@@ -717,6 +742,11 @@ public class GUI implements Runnable {
         createOptionsComponents();
     }
     
+    private void viewprioritiesActionPerformed(ActionEvent evt){
+        sp = sp == true ? false : true;
+        updateCells();
+    }
+    
     /**
      * Päivittää solutaulukon.
      */
@@ -725,15 +755,22 @@ public class GUI implements Runnable {
         if (session.getWorld() != null) {
             int size = session.getWorld().getMap().length;
             int prior;
+            boolean viewprioritiess = viewpriorities.isSelected();
             for (int i = 0; i < size; i++) {
                 for (int j = 0; j < size; j++) {
                     JMenu item = table[i][j].getMenu(0);
                     try {
                         prior = session.getWorld().getMap()[i][j].getRules().getPriority();
-                        item.setText("" + prior);
+                        if(viewprioritiess)
+                            item.setText("" + prior);
+                        else
+                            item.setText("");
                         table[i][j].setBackground(colormap.get(prior));
                     } catch (Exception e) {
-                        item.setText(".");
+                        if(viewprioritiess)
+                            item.setText(".");
+                        else
+                            item.setText("");
                         table[i][j].setBackground(Color.WHITE);
                     }
                     for (Rules r : session.getRules()) {
@@ -745,7 +782,7 @@ public class GUI implements Runnable {
                     }
                     //kuollut solu
                     JMenuItem cellitem = item.getItem(session.getRules().size());
-                    cellitem.setText(".");
+                    cellitem.setText("Dead");
                     cellitem.removeActionListener(cellitem.getActionListeners()[0]);
                     cellitem.addActionListener(new CellActionListener(this, i, j, null));
                 }
