@@ -20,3 +20,6 @@ TUNTIKIRJANPITO
 * 26.8 n. 4h swing x(
 * 27.8 n. 5h swing <3
 * 28.8 n. 4h swing + dl5 setit
+* 29.8 n. 90 min pientä viimehetken testausta
+* 30.9 n. 90 min käyttöliittymän viimeistelyä
+* 31.9 n. 2h koodikatselmointia ja refaktorointia

@@ -48,11 +48,11 @@ public class Utilities {
      * Tarkistaa että annettu merkkijono vastaa sallittua kokoa.
      *
      * @param s Tarkistettava tekstikenttä
-     * @return True jos tekstikentän sisältö vastaa lukua [2,1999], muuten
+     * @return True jos tekstikentän sisältö vastaa lukua [2,99], muuten
      * false.
      */
     public static boolean correctSize(String s) {
-        return s.matches("[2-9]|[1-9][0-9]|[1-9][0-9][0-9]|1[0-9][0-9][0-9]");
+        return s.matches("[2-9]|[1-9][0-9]");
     }
 
     /**

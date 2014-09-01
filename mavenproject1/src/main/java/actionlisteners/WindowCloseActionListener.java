@@ -32,7 +32,7 @@ public class WindowCloseActionListener implements ActionListener {
         gui.getSession().getWorld().removeExtras();
 
         if (redrawmainwindow != 0) {
-            gui.createComponents(gui.getFrame().getContentPane());
+            gui.createComponents();
             gui.getFrame().pack();
             gui.getFrame().setVisible(true);
         }

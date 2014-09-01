@@ -61,11 +61,11 @@ public class UtilitiesTest {
         assertTrue(correctSize("2"));
         assertTrue(correctSize("9"));
         assertTrue(correctSize("10"));
-        assertTrue(correctSize("1999"));
-        assertTrue(correctSize("999"));
-        assertTrue(correctSize("1000"));
+        assertFalse(correctSize("1999"));
+        assertFalse(correctSize("999"));
+        assertFalse(correctSize("1000"));
         assertTrue(correctSize("99"));
-        assertTrue(correctSize("100"));
+        assertFalse(correctSize("100"));
         assertFalse(correctSize("2000"));
         assertFalse(correctSize("0"));
         assertFalse(correctSize("1"));

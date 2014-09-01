@@ -17,7 +17,6 @@ import actionlisteners.StopActionListener;
 import actionlisteners.WindowCloseActionListener;
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -47,7 +46,7 @@ import logic.Utilities;
 import logic.World;
 
 /**
- * Ohjelman graafinen käyttöliittymä.
+ * Ohjelman graafinen käyttöliittymä. 
  *
  * @author apa
  */
@@ -87,7 +86,6 @@ public class GUI implements Runnable {
     //muut itemit
     private JFileChooser filechooser;
     private JFrame optionswindow;
-    private Color defaultcolor;
 
     //optionswindown komponentit!
     //options
@@ -128,414 +126,6 @@ public class GUI implements Runnable {
         iterationsperstep = 1;
         timeperstep = 350;
         colormap = new HashMap<Integer, Color>();
-    }
-
-    @Override
-    public void run() {
-        frame = new JFrame("Apa's cellular automata");
-        frame.setPreferredSize(new Dimension(650, 650));
-        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        defaultcolor=UIManager.getColor("JMenubar.background");
-
-        createComponents(frame.getContentPane());
-
-        frame.pack();
-        frame.setVisible(true);
-
-    }
-
-    public void createComponents(Container container) {
-        container.removeAll();
-        //framen itemit
-        menu = new JMenuBar();
-        //panel = new JPanel();
-        //menun itemit
-        file = new JMenu("File");
-        edit = new JMenu("Edit");
-        controls = new JMenu("Controls");
-        //file menun itemit
-        newsession = new JMenuItem("New");
-        open = new JMenuItem("Open");
-        save = new JMenuItem("Save");
-        saveas = new JMenuItem("Save As...");
-        exit = new JMenuItem("Exit");
-        //edit menun itemit
-        options = new JMenuItem("Options");
-        //controls menun itemit
-        nextstep = new JMenuItem("Next step");
-        start = new JMenuItem("Start");
-        stop = new JMenuItem("Stop");
-        randomize = new JMenuItem("Randomize");
-        clear = new JMenuItem("Clear");
-        //panelin itemit
-        createCells();
-
-        //muut itemit
-        filechooser = new JFileChooser();
-        optionswindow = new JFrame("Options");
-
-        optionswindow.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-
-        //actionlistenerien määritys
-        newsession.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                newsessionActionPerformed(evt);
-            }
-        });
-        open.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                openActionPerformed(evt);
-            }
-        });
-
-        save.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                saveActionPerformed(evt);
-            }
-        });
-
-        saveas.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                saveasActionPerformed(evt);
-            }
-        });
-
-        exit.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                exitActionPerformed(evt);
-            }
-        });
-
-        options.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                optionsActionPerformed(evt);
-            }
-        });
-
-        nextstep.addActionListener(new NextStepActionListener(this));
-        start.addActionListener(new StartActionListener(this));
-        stop.addActionListener(new StopActionListener(this));
-        randomize.addActionListener(new RandomizeActionListener(this));
-        clear.addActionListener(new ClearActionListener(this));
-
-        //lisätään komponentit toistensa sisään
-        file.add(newsession);
-        file.add(open);
-        file.add(save);
-        file.add(saveas);
-        file.add(exit);
-
-        edit.add(options);
-
-        controls.add(nextstep);
-        controls.add(start);
-        controls.add(stop);
-        controls.add(randomize);
-        controls.add(clear);
-
-        menu.add(file);
-        menu.add(edit);
-        menu.add(controls);
-
-        container.add(menu, BorderLayout.NORTH);
-    }
-
-    //updatecells()
-    public void updateCells(){
-        //panelin itemit
-        if (session.getWorld() != null) {
-            int size = session.getWorld().getMap().length;
-            int prior;
-            for (int i = 0; i < size; i++) {
-                for (int j = 0; j < size; j++) {
-                    JMenu item = table[i][j].getMenu(0);
-                    try {
-                        prior = session.getWorld().getMap()[i][j].getRules().getPriority();
-                        item.setText("" + prior);
-                        table[i][j].setBackground(colormap.get(prior));
-                    } catch (Exception e) {
-                        item.setText("0");
-                        table[i][j].setBackground(Color.WHITE);
-                    }
-                    for (Rules r : session.getRules()) {
-                        JMenuItem cellitem = item.getItem(session.getRules().indexOf(r));
-                        cellitem.setText("" + r.getPriority());
-                        cellitem.setBackground(colormap.get(r.getPriority()));
-                        cellitem.removeActionListener(cellitem.getActionListeners()[0]); 
-                        cellitem.addActionListener(new CellActionListener(this, i, j, r));
-                    }
-                    //kuollut solu
-                    JMenuItem cellitem = item.getItem(session.getRules().size());
-                    cellitem.setText("0");
-                    cellitem.removeActionListener(cellitem.getActionListeners()[0]);
-                    cellitem.addActionListener(new CellActionListener(this, i, j, null));
-                }
-            }
-        }
-    }
-    
-    public void createCells() {
-        if (panel != null) {
-            frame.getContentPane().remove(panel);
-        }
-        panel = new JPanel();
-        //panelin itemit
-        if (session.getWorld() != null) {
-            int size = session.getWorld().getMap().length;
-            int prior;
-            table = new JMenuBar[size][size];
-            panel.setLayout(new GridLayout(size, size));
-            for (int i = 0; i < size; i++) {
-                for (int j = 0; j < size; j++) {
-                    table[i][j] = new JMenuBar();
-                    JMenu item = new JMenu();
-                    item.setPreferredSize(new Dimension(300, 300));
-                    try {
-                        prior = session.getWorld().getMap()[i][j].getRules().getPriority();
-                        item.setText("" + prior);
-                        table[i][j].setBackground(colormap.get(prior));
-                    } catch (Exception e) {
-                        item.setText("0");
-                        table[i][j].setBackground(Color.WHITE);
-                    }
-                    for (Rules r : session.getRules()) {
-                        JMenuItem cellitem = new JMenuItem();
-                        cellitem.setText("" + r.getPriority());
-                        cellitem.setBackground(colormap.get(r.getPriority()));
-                        cellitem.addActionListener(new CellActionListener(this, i, j, r));
-                        item.add(cellitem);
-                    }
-                    //kuollut solu
-                    JMenuItem cellitem = new JMenuItem();
-                    cellitem.setText("0");
-                    cellitem.addActionListener(new CellActionListener(this, i, j, null));
-                    item.add(cellitem);
-                    table[i][j].add(item);
-                    panel.add(table[i][j]); //exception wtf
-
-                }
-            }
-        } else {
-            table = null;
-        }
-        frame.getContentPane().add(panel, BorderLayout.CENTER);
-    }
-
-    public void createOptionsComponents(Container container) {
-        optionswindow.getContentPane().removeAll(); //pakko
-        //options
-        optionspane = new JTabbedPane();
-        //välilehdet
-        rulestab = new JPanel();
-        generaltab = new JPanel();
-        //rulestabin itemit
-        ruleslisteditremove = new JPanel();
-        rulesadd = new JPanel();
-        //rulesaddin itemit
-        rulesaddtitle = new JLabel();
-        bl = new JTextField();
-        dl = new JTextField();
-        priority = new JTextField();
-        add = new JButton();
-        color = new JButton();
-        //ruleslisteditremoven itemit
-        rulesgroup = new ButtonGroup();
-        editbutton = new JButton();
-        remove = new JButton();
-        rulesok = new JButton();
-        //generaltabin itemit
-        generaloptions = new JPanel();
-        //generaloptionsin itemit
-        sizetitle = new JLabel();
-        size = new JTextField();
-        steptimetitle = new JLabel();
-        steptime = new JTextField();
-        iterationstitle = new JLabel();
-        iterations = new JTextField();
-        generalsave = new JButton();
-        generalok = new JButton();
-
-        //rulestab
-        rulesaddtitle.setText("Add/modify rules here:");
-        dl.setText("Dead conditions (separate with comma)");
-        bl.setText("Birth conditions (separate with comma)");
-        priority.setText("Priority (integer)");
-        add.setText("Add");
-        color.setText("Color");
-        editbutton.setText("Edit");
-        remove.setText("Remove");
-        rulesok.setText("Ok");
-
-        //generaltab
-        sizetitle.setText("Edge size:");
-        if (session.getWorld() != null) {
-            size.setText(session.getWorld().getMap().length + "");
-        } else {
-            size.setText("0");
-        }
-
-        steptimetitle.setText("Time per step (ms):");
-        steptime.setText(timeperstep + "");
-        iterationstitle.setText("Iterations per step:");
-        iterations.setText(iterationsperstep + "");
-        generalsave.setText("Save");
-        generalok.setText("Ok");
-
-        if (session != null && session.getWorld() != null && session.getWorld().getRules() != null) {
-            ArrayList<Rules> rules = session.getWorld().getRules();
-            for (Rules r : rules) {
-                JRadioButton tmp = new JRadioButton();
-                tmp.setText("Rule " + r.getPriority());
-                rulesgroup.add(tmp);
-                ruleslisteditremove.add(tmp);
-            }
-        }
-
-        rulestab.setLayout(new BorderLayout());
-        rulesadd.setLayout(new BoxLayout(rulesadd, BoxLayout.Y_AXIS));
-        ruleslisteditremove.setLayout(new BoxLayout(ruleslisteditremove, BoxLayout.Y_AXIS));
-
-        //actionlistenerit
-        color.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                colorActionPerformed(evt);
-            }
-        });
-        add.addActionListener(new AddRule(this));
-        editbutton.addActionListener(new EditActionListener(this, 1));
-        remove.addActionListener(new EditActionListener(this, 0));
-        rulesok.addActionListener(new WindowCloseActionListener(this, optionswindow, 1));
-        generalsave.addActionListener(new GeneralSaveActionListener(this, size, steptime, iterations));
-        generalok.addActionListener(new WindowCloseActionListener(this, optionswindow, 1));
-
-        //focuslistenerit
-        bl.addFocusListener(new FocusListener() {
-            @Override
-            public void focusGained(FocusEvent e) {
-                if(bl.getText().contains("Birth"))
-                    bl.setText("");
-            }
-            @Override
-            public void focusLost(FocusEvent fe) {
-            }
-        });
-        dl.addFocusListener(new FocusListener() {
-            @Override
-            public void focusGained(FocusEvent e) {
-                if(dl.getText().contains("Dead"))
-                    dl.setText("");
-            }
-            @Override
-            public void focusLost(FocusEvent fe) {
-            }
-        });
-        priority.addFocusListener(new FocusListener() {
-            @Override
-            public void focusGained(FocusEvent e) {
-                if(priority.getText().contains("Priority"))
-                    priority.setText("");
-            }
-            @Override
-            public void focusLost(FocusEvent fe) {
-            }
-        });
-
-        //pakataan komponentit toistensa sisään
-        rulesadd.add(rulesaddtitle);
-        rulesadd.add(bl);
-        rulesadd.add(dl);
-        rulesadd.add(priority);
-        rulesadd.add(color);
-        rulesadd.add(add);
-
-        ruleslisteditremove.add(editbutton);
-        ruleslisteditremove.add(remove);
-
-        generaltab.setLayout(new BoxLayout(generaltab, BoxLayout.Y_AXIS));
-        generaltab.add(sizetitle);
-        generaltab.add(size);
-        generaltab.add(steptimetitle);
-        generaltab.add(steptime);
-        generaltab.add(iterationstitle);
-        generaltab.add(iterations);
-        generaltab.add(generalsave);
-        generaltab.add(generalok);
-
-        rulestab.add(rulesadd);
-        rulestab.add(ruleslisteditremove, BorderLayout.EAST);
-        rulestab.add(rulesok, BorderLayout.SOUTH);
-
-        generaltab.add(generaloptions);
-
-        optionspane.addTab("Rules", rulestab);
-        optionspane.addTab("General", generaltab);
-        container.add(optionspane);
-    }
-
-    //tapahtumien käsittely
-    private void newsessionActionPerformed(ActionEvent evt) {
-        session = new Session(this);
-        createComponents(frame.getContentPane());
-        frame.pack();
-        frame.setVisible(true);
-    }
-
-    private void openActionPerformed(ActionEvent evt) {
-        session.stop();
-        filechooser.setDialogTitle("Open");
-        filechooser.setApproveButtonText("Open");
-        int returnVal = filechooser.showOpenDialog(frame);
-        if (returnVal == javax.swing.JFileChooser.APPROVE_OPTION) {
-            File file = filechooser.getSelectedFile();
-            session.load(Utilities.correctFilename(file.getName()));
-            filename = Utilities.correctFilename(file.getName());
-        } else {
-            System.out.println("File was not opened!\n" + evt.getActionCommand());
-        }
-        createComponents(frame.getContentPane());
-        frame.pack();
-        frame.setVisible(true);
-    }
-
-    private void saveActionPerformed(ActionEvent evt) {
-        if (filename != null) {
-            session.save(Utilities.correctFilename(filename));
-        } else {
-            saveasActionPerformed(evt);
-        }
-    }
-
-    private void saveasActionPerformed(ActionEvent evt) {
-        filechooser.setDialogTitle("Save As ");
-        filechooser.setApproveButtonText("Save");
-        int returnVal = filechooser.showOpenDialog(frame);
-        if (returnVal == javax.swing.JFileChooser.APPROVE_OPTION) {
-            File file = filechooser.getSelectedFile();
-            session.save(Utilities.correctFilename(file.getName()));
-        } else {
-            System.out.println("File was not saved!\n" + evt.getActionCommand());
-        }
-    }
-
-    private void colorActionPerformed(ActionEvent evt) {
-
-        Color rulescolor = JColorChooser.showDialog(color, "Choose cells color", color.getBackground());
-        color.setBackground(rulescolor);
-    }
-
-    private void exitActionPerformed(ActionEvent evt) {
-        System.exit(0);
-    }
-
-    private void optionsActionPerformed(ActionEvent evt) {
-        
-        session.stop();
-        optionswindow.setPreferredSize(new Dimension(500, 350));
-
-        createOptionsComponents(optionswindow.getContentPane());
-        optionswindow.pack();
-        optionswindow.setVisible(true);
-
     }
 
     public void setTimePerStep(int timeperstep) {
@@ -588,5 +178,448 @@ public class GUI implements Runnable {
 
     public JButton getColor() {
         return color;
+    }
+
+    @Override
+    public void run() {
+
+        createWindows();
+
+        createComponents();
+
+    }
+
+    private void createWindows() {
+        frame = new JFrame("Apa's cellular automata");
+        frame.setPreferredSize(new Dimension(650, 650));
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        optionswindow = new JFrame("Options");
+        optionswindow.setPreferredSize(new Dimension(500, 350));
+        optionswindow.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+    }
+
+    public void createComponents() {
+        frame.getContentPane().removeAll();
+        //menu
+        createMainMenu();
+        //panelin itemit
+        createCells();
+        //muut itemit
+        createOthers();
+        //actionlistenerien määritys
+        addMainActionListeners();
+        //lisätään komponentit toistensa sisään
+        pack();
+    }
+
+    private void createMainMenu() {
+        //framen itemit
+        menu = new JMenuBar();
+        //menun itemit
+        file = new JMenu("File");
+        edit = new JMenu("Edit");
+        controls = new JMenu("Controls");
+        //file menun itemit
+        newsession = new JMenuItem("New");
+        open = new JMenuItem("Open");
+        save = new JMenuItem("Save");
+        saveas = new JMenuItem("Save As...");
+        exit = new JMenuItem("Exit");
+        //edit menun itemit
+        options = new JMenuItem("Options");
+        //controls menun itemit
+        nextstep = new JMenuItem("Next step");
+        start = new JMenuItem("Start");
+        stop = new JMenuItem("Stop");
+        randomize = new JMenuItem("Randomize");
+        clear = new JMenuItem("Clear");
+    }
+
+    public void createCells() {
+        if (panel != null) {
+            frame.getContentPane().remove(panel);
+        }
+        panel = new JPanel();
+        //panelin itemit
+        if (session.getWorld() != null) {
+            int size = session.getWorld().getMap().length;
+            int prior;
+            table = new JMenuBar[size][size];
+            panel.setLayout(new GridLayout(size, size));
+            for (int i = 0; i < size; i++) {
+                for (int j = 0; j < size; j++) {
+                    table[i][j] = new JMenuBar();
+                    JMenu item = new JMenu();
+                    item.setPreferredSize(new Dimension(300, 300));
+                    try {
+                        prior = session.getWorld().getMap()[i][j].getRules().getPriority();
+                        item.setText("" + prior);
+                        table[i][j].setBackground(colormap.get(prior));
+                    } catch (Exception e) {
+                        item.setText("0");
+                        table[i][j].setBackground(Color.WHITE);
+                    }
+                    for (Rules r : session.getRules()) {
+                        JMenuItem cellitem = new JMenuItem();
+                        cellitem.setText("" + r.getPriority());
+                        cellitem.setBackground(colormap.get(r.getPriority()));
+                        cellitem.addActionListener(new CellActionListener(this, i, j, r));
+                        item.add(cellitem);
+                    }
+                    //kuollut solu
+                    JMenuItem cellitem = new JMenuItem();
+                    cellitem.setText("0");
+                    cellitem.addActionListener(new CellActionListener(this, i, j, null));
+                    item.add(cellitem);
+                    table[i][j].add(item);
+                    panel.add(table[i][j]); //exception wtf
+
+                }
+            }
+        } else {
+            table = null;
+        }
+        frame.getContentPane().add(panel, BorderLayout.CENTER);
+    }
+
+    //updatecells()
+    public void updateCells() {
+        //panelin itemit
+        if (session.getWorld() != null) {
+            int size = session.getWorld().getMap().length;
+            int prior;
+            for (int i = 0; i < size; i++) {
+                for (int j = 0; j < size; j++) {
+                    JMenu item = table[i][j].getMenu(0);
+                    try {
+                        prior = session.getWorld().getMap()[i][j].getRules().getPriority();
+                        item.setText("" + prior);
+                        table[i][j].setBackground(colormap.get(prior));
+                    } catch (Exception e) {
+                        item.setText("0");
+                        table[i][j].setBackground(Color.WHITE);
+                    }
+                    for (Rules r : session.getRules()) {
+                        JMenuItem cellitem = item.getItem(session.getRules().indexOf(r));
+                        cellitem.setText("" + r.getPriority());
+                        cellitem.setBackground(colormap.get(r.getPriority()));
+                        cellitem.removeActionListener(cellitem.getActionListeners()[0]);
+                        cellitem.addActionListener(new CellActionListener(this, i, j, r));
+                    }
+                    //kuollut solu
+                    JMenuItem cellitem = item.getItem(session.getRules().size());
+                    cellitem.setText("0");
+                    cellitem.removeActionListener(cellitem.getActionListeners()[0]);
+                    cellitem.addActionListener(new CellActionListener(this, i, j, null));
+                }
+            }
+        }
+    }
+
+    private void createOthers() {
+        filechooser = new JFileChooser();
+
+    }
+
+    private void addMainActionListeners() {
+        newsession.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                newsessionActionPerformed(evt);
+            }
+        });
+        open.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                openActionPerformed(evt);
+            }
+        });
+
+        save.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveActionPerformed(evt);
+            }
+        });
+
+        saveas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveasActionPerformed(evt);
+            }
+        });
+
+        exit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                exitActionPerformed(evt);
+            }
+        });
+
+        options.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                optionsActionPerformed(evt);
+            }
+        });
+
+        nextstep.addActionListener(new NextStepActionListener(this));
+        start.addActionListener(new StartActionListener(this));
+        stop.addActionListener(new StopActionListener(this));
+        randomize.addActionListener(new RandomizeActionListener(this));
+        clear.addActionListener(new ClearActionListener(this));
+    }
+
+    private void pack() {
+        file.add(newsession);
+        file.add(open);
+        file.add(save);
+        file.add(saveas);
+        file.add(exit);
+
+        edit.add(options);
+
+        controls.add(nextstep);
+        controls.add(start);
+        controls.add(stop);
+        controls.add(randomize);
+        controls.add(clear);
+
+        menu.add(file);
+        menu.add(edit);
+        menu.add(controls);
+
+        frame.getContentPane().add(menu, BorderLayout.NORTH);
+
+        frame.pack();
+        frame.setVisible(true);
+    }
+
+    public void createOptionsComponents() {
+        optionswindow.getContentPane().removeAll();
+        //luodaan komponentit
+        createTabbedPane();
+        //annetaan alkuarvot ja nimet komponenteille.
+        setOptionsValues();
+        //action- ja focuslistenerit
+        addOptionsListeners();
+        //lisätään komponentit toistensa sisään
+        packOptions();
+
+    }
+
+    private void createTabbedPane() {
+        //options
+        optionspane = new JTabbedPane();
+        //välilehdet
+        rulestab = new JPanel();
+        generaltab = new JPanel();
+        //rulestabin itemit
+        ruleslisteditremove = new JPanel();
+        rulesadd = new JPanel();
+        //rulesaddin itemit
+        rulesaddtitle = new JLabel();
+        bl = new JTextField();
+        dl = new JTextField();
+        priority = new JTextField();
+        add = new JButton();
+        color = new JButton();
+        //ruleslisteditremoven itemit
+        rulesgroup = new ButtonGroup();
+        editbutton = new JButton();
+        remove = new JButton();
+        rulesok = new JButton();
+        //generaltabin itemit
+        generaloptions = new JPanel();
+        //generaloptionsin itemit
+        sizetitle = new JLabel();
+        size = new JTextField();
+        steptimetitle = new JLabel();
+        steptime = new JTextField();
+        iterationstitle = new JLabel();
+        iterations = new JTextField();
+        generalsave = new JButton();
+        generalok = new JButton();
+    }
+
+    private void setOptionsValues() {
+        //rulestab
+        rulesaddtitle.setText("Add/modify rules here:");
+        dl.setText("Dead conditions (separate with comma)");
+        bl.setText("Birth conditions (separate with comma)");
+        priority.setText("Priority (integer)");
+        add.setText("Add");
+        color.setText("Color");
+        editbutton.setText("Edit");
+        remove.setText("Remove");
+        rulesok.setText("Ok");
+
+        //generaltab
+        sizetitle.setText("Edge size:");
+        if (session.getWorld() != null) {
+            size.setText(session.getWorld().getMap().length + "");
+        } else {
+            size.setText("0");
+        }
+
+        steptimetitle.setText("Time per step (ms):");
+        steptime.setText(timeperstep + "");
+        iterationstitle.setText("Iterations per step:");
+        iterations.setText(iterationsperstep + "");
+        generalsave.setText("Save");
+        generalok.setText("Ok");
+
+        if (session != null && session.getWorld() != null && session.getWorld().getRules() != null) {
+            ArrayList<Rules> rules = session.getWorld().getRules();
+            for (Rules r : rules) {
+                JRadioButton tmp = new JRadioButton();
+                tmp.setText("Rule " + r.getPriority());
+                rulesgroup.add(tmp);
+                ruleslisteditremove.add(tmp);
+            }
+        }
+    }
+
+    private void addOptionsListeners() {
+        //actionlistenerit
+        color.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                colorActionPerformed(evt);
+            }
+        });
+        
+        add.addActionListener(new AddRule(this));
+        editbutton.addActionListener(new EditActionListener(this, 1));
+        remove.addActionListener(new EditActionListener(this, 0));
+        rulesok.addActionListener(new WindowCloseActionListener(this, optionswindow, 1));
+        generalsave.addActionListener(new GeneralSaveActionListener(this, size, steptime, iterations));
+        generalok.addActionListener(new WindowCloseActionListener(this, optionswindow, 1));
+
+        //focuslistenerit
+        bl.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                if (bl.getText().contains("Birth")) {
+                    bl.setText("");
+                }
+            }
+
+            @Override
+            public void focusLost(FocusEvent fe) {
+            }
+        });
+        dl.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                if (dl.getText().contains("Dead")) {
+                    dl.setText("");
+                }
+            }
+
+            @Override
+            public void focusLost(FocusEvent fe) {
+            }
+        });
+        priority.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                if (priority.getText().contains("Priority")) {
+                    priority.setText("");
+                }
+            }
+
+            @Override
+            public void focusLost(FocusEvent fe) {
+            }
+        });
+    }
+
+    private void packOptions() {
+        rulestab.setLayout(new BorderLayout());
+        rulesadd.setLayout(new BoxLayout(rulesadd, BoxLayout.Y_AXIS));
+        ruleslisteditremove.setLayout(new BoxLayout(ruleslisteditremove, BoxLayout.Y_AXIS));
+
+        //pakataan komponentit toistensa sisään
+        rulesadd.add(rulesaddtitle);
+        rulesadd.add(bl);
+        rulesadd.add(dl);
+        rulesadd.add(priority);
+        rulesadd.add(color);
+        rulesadd.add(add);
+
+        ruleslisteditremove.add(editbutton);
+        ruleslisteditremove.add(remove);
+
+        generaltab.setLayout(new BoxLayout(generaltab, BoxLayout.Y_AXIS));
+        generaltab.add(sizetitle);
+        generaltab.add(size);
+        generaltab.add(steptimetitle);
+        generaltab.add(steptime);
+        generaltab.add(iterationstitle);
+        generaltab.add(iterations);
+        generaltab.add(generalsave);
+        generaltab.add(generalok);
+
+        rulestab.add(rulesadd);
+        rulestab.add(ruleslisteditremove, BorderLayout.EAST);
+        rulestab.add(rulesok, BorderLayout.SOUTH);
+
+        generaltab.add(generaloptions);
+
+        optionspane.addTab("Rules", rulestab);
+        optionspane.addTab("General", generaltab);
+        optionswindow.getContentPane().add(optionspane);
+
+        optionswindow.pack();
+        optionswindow.setVisible(true);
+    }
+
+    //tapahtumien käsittely
+    private void newsessionActionPerformed(ActionEvent evt) {
+        session = new Session(this);
+        createComponents();
+    }
+
+    private void openActionPerformed(ActionEvent evt) {
+        session.stop();
+        filechooser.setDialogTitle("Open");
+        filechooser.setApproveButtonText("Open");
+        int returnVal = filechooser.showOpenDialog(frame);
+        if (returnVal == javax.swing.JFileChooser.APPROVE_OPTION) {
+            File file = filechooser.getSelectedFile();
+            session.load(Utilities.correctFilename(file.getName()));
+            filename = Utilities.correctFilename(file.getName());
+        } else {
+            System.out.println("File was not opened!\n" + evt.getActionCommand());
+        }
+        createComponents();
+    }
+
+    private void saveActionPerformed(ActionEvent evt) {
+        if (filename != null) {
+            session.save(Utilities.correctFilename(filename));
+        } else {
+            saveasActionPerformed(evt);
+        }
+    }
+
+    private void saveasActionPerformed(ActionEvent evt) {
+        filechooser.setDialogTitle("Save As ");
+        filechooser.setApproveButtonText("Save");
+        int returnVal = filechooser.showOpenDialog(frame);
+        if (returnVal == javax.swing.JFileChooser.APPROVE_OPTION) {
+            File file = filechooser.getSelectedFile();
+            session.save(Utilities.correctFilename(file.getName()));
+        } else {
+            System.out.println("File was not saved!\n" + evt.getActionCommand());
+        }
+    }
+
+    private void colorActionPerformed(ActionEvent evt) {
+        Color rulescolor = JColorChooser.showDialog(color, "Choose cells color", color.getBackground());
+        color.setBackground(rulescolor);
+    }
+
+    private void exitActionPerformed(ActionEvent evt) {
+        System.exit(0);
+    }
+
+    private void optionsActionPerformed(ActionEvent evt) {
+        session.stop();
+        createOptionsComponents();
     }
 }

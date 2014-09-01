@@ -64,7 +64,7 @@ public class EditActionListener implements ActionListener {
 
         
         gui.getSession().getRules().remove(del);
-        gui.createOptionsComponents(gui.getOptionsWindow());
+        gui.createOptionsComponents();
         if (edit==1&&del!=null) {
             gui.getBl().setText(Utilities.listToString(del.getBirth()));
             gui.getDl().setText(Utilities.listToString(del.getDie()));
