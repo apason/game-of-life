@@ -36,7 +36,7 @@ public class Utilities {
      * muuten false
      */
     public static boolean correctConditionList(String s) {
-        return s.matches("([0-9],|[1-9][0-9],)*([0-9]|[1-9][0-9])");
+        return s.matches("([0-9],|[1-8][0-9],|9[0-6])*([0-9]|[1-9][0-9])");
     }
 
     /**

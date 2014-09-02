@@ -33,6 +33,7 @@ public class Session implements Runnable {
      * Sessionin tunnettava gui koska rajapinnan Runnable metodi Run tarvitsee
      * tämän tiedon eikä sille voi antaa parametrejä.
      */
+    
     private GUI gui;
 
     /**

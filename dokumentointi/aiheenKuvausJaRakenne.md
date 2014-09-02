@@ -19,7 +19,7 @@ Ohjelmalla on vain yksi käyttäjä.
 
 ###Toiminnot###
 * solujen säännöt
- * käyttäjä määrittää säännöt joilla soluista tulee eläviä tai kuolleita.
+ * käyttäjä määrittää säännöt joilla soluista tulee eläviä tai kuolleita sekä solujen prioriteetit.
 * muut säännöt
  * käyttäjä määrittää minkä kokoisessa maailmassa simulaatio tapahtuu, simulaationopeuden ja montako askelta simuloidaan kerallaan.
 * simulaation aloitus
@@ -61,7 +61,8 @@ omistaa taulukollisen Cell olioita ja listan Rules olioita. Kyseinen Cell tauluk
 simuloitava ja piirrettävä maailma. Rules olioita sisältävässä listassa puolestaan on tieto
 kaikista maailman Cell olioilla olevista Rules olioista. Vaikka tieto olisikin saatavissa
 käymällä kaikki Cell oliot läpi, säästää listan pitäminen kuitenkin merkittävästi laskentatehoa.
-Luokat Saver ja Loader hoitavat tiedostonkäsittelyn Sessionin pyynnöstä. 
+Luokat Saver ja Loader hoitavat tiedostonkäsittelyn Sessionin pyynnöstä. Tarkemmat määrittelyt
+rakenteesta löytyy javadocsista ja ohjelmakoodista.
 
 ### Säännöt ###
 
@@ -80,7 +81,7 @@ on tyyppi (solun säännöt). Säännöt koostuvat kolmesta eri osasäännöstä
  * Kuolemasäännöt: Tieto siitä, milloin kyseinen solutyyppi kuolee.
  * prioriteetti: Solutyyppien kesken uniikki kokonaisluku [0, 12].
 
-Syntymä- ja kuolemasäännöt ovat lista kokonaislukuja [0,99]. Sääntö edustaa sitä **naapurisolujen
+Syntymä- ja kuolemasäännöt ovat lista kokonaislukuja [0,96]. Sääntö edustaa sitä **naapurisolujen
 prioriteettien summaa**, joka saa kyseisen solun eläväksi.
 
 **Syntymä- ja kuolinsäännöt eivät voi olla ristiriidassa** , eivät siis voi sisältää samaa lukuarvoa.
@@ -103,9 +104,8 @@ Solun ei siis tarvitse olla kuollut, jotta siihen voisi syntyä uusi solu.
 Koska prioriteetti on solutyypille uniikki, ja prioriteetit ovat rajattu arvoihin [0, 12], on
 yhdessä simulaatiossa kerrallaan enintään 13 erilaista solua. (Prioriteetin 0 omaava solutyyppi
 on hieman erikoinen, sillä se ei vaikuta muiden solujen syntymään/kuolemaan, mutta muut solut
-vaikuttavat siihen.)
-
-
+vaikuttavat siihen.) Prioriteetin maksimiarvosta seuraa, että syntymä- ja kuolemasäännöt
+rajoittuvat 97 vaihtoehtoon. 8*12=96
 
 #### Esimerkkejä ####
 
