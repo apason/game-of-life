@@ -8,7 +8,8 @@ Usean solutyypin soluautomaatti. Toteutetaan ohjelma, joka simuloi satunnaista t
 halutun kokoista maailmaa. Maailman säännöt (esim game of lifen säännöt) voidaan määrittää
 ennen simulaation aloitusta. Simulaatiota voidaan suorittaa jatkuvasti tai eri pituisissa
 ajanjaksoissa esim 5 askelta kerrallaan. Myös simulaatiomaaliman koko ja simulaation piirtonopeus
-voidaan määritellä.
+voidaan määritellä (Kuitenkin tiettyjen rajojen sisällä). 
+
 
 Käyttäjät ja toiminnot
 ----------------------
@@ -18,17 +19,49 @@ Ohjelmalla on vain yksi käyttäjä.
 
 ###Toiminnot###
 * solujen säännöt
- * käyttäjä määrittää säännöt joilla solusta tulee elävä tai kuollut ja jolloin solu pysyy elävänä tai kuolleena
+ * käyttäjä määrittää säännöt joilla soluista tulee eläviä tai kuolleita.
 * muut säännöt
- * käyttäjä määrittää minkä kokoisessa maailmassa simulaatio tapahtuu, simulaationopeuden yms.
+ * käyttäjä määrittää minkä kokoisessa maailmassa simulaatio tapahtuu, simulaationopeuden ja montako askelta simuloidaan kerallaan.
 * simulaation aloitus
 * simulaation lopetus
+* seuraavan simulaatioaskelen tekeminen
+* maailman satunnaistaminen
+* maailman tyhjennys
 * tietyn lopputuloksen tallentaminen ja lataaminen
 
 Tekniset tiedot
 ---------------
 
 ### Rakenne ###
+
+Ohjelmakoodi on jaettu seuraaviin pakkauksiin ja luokkiin:
+ * main
+  * Main
+ * interfaces
+  * Session
+  * GUI
+ * logic
+  * Utilities
+  * World
+  * Cell
+  * Rules
+ * filehandling
+  * Loader
+  * Saver
+
+Main luokalla ei ole muuta funktiota kuin käynnistää ohjelma GUI luokkaa käyttämällä.
+GUI luokka on graafinen käyttöliittymä joka toimii rajapintana käyttäjän ja ohjelman välillä.
+Session luokka taas toimii käyttöliittymänä GUIn ja muun ohjelman välillä. Vaikka GUI ja Session
+ovat javan normaaleita luokkia, ne ovat käyttöliittymiä käyttäjän ja Sessionin ja Sessionin
+ja sovelluslogiikan välillä. Tästä syystä pakkauksen nimi on interfaces. Kyse ei siis ole 
+javan interface tyypistä. GUI tuntee Sessionin ja Session tuntee GUIn. GUI ei
+kuitenkaan itse käytä sovelluslogiikan tai tiedostonkäsittelyn metodeita. Itse simulaatio
+tapahtuu World luokassa ja sen tuntemissa ja käyttämissä luokissa Cell ja Rules. World
+omistaa taulukollisen Cell olioita ja listan Rules olioita. Kyseinen Cell taulukko on
+simuloitava ja piirrettävä maailma. Rules olioita sisältävässä listassa puolestaan on tieto
+kaikista maailman Cell olioilla olevista Rules olioista. Vaikka tieto olisikin saatavissa
+käymällä kaikki Cell oliot läpi, säästää listan pitäminen kuitenkin merkittävästi laskentatehoa.
+Luokat Saver ja Loader hoitavat tiedostonkäsittelyn Sessionin pyynnöstä. 
 
 ### Säännöt ###
 
