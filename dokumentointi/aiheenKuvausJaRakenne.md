@@ -28,6 +28,7 @@ Ohjelmalla on vain yksi käyttäjä.
 * maailman satunnaistaminen
 * maailman tyhjennys
 * tietyn lopputuloksen tallentaminen ja lataaminen
+* Prioriteettien piilottaminen solumaailmasta
 
 Tekniset tiedot
 ---------------

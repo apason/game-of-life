@@ -24,6 +24,7 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTabbedPane;
@@ -721,8 +722,17 @@ public class GUI implements Runnable {
      * @param evt kseinen ActionEvent
      */
     private void newsessionActionPerformed(ActionEvent evt) {
-        session = new Session(this);
-        createComponents();
+        if (session.getWorld() != null) {
+            int temp = JOptionPane.showConfirmDialog(frame, "You will permanently lost current session", "Confirmation", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
+            if (temp == 0) {
+                session = new Session(this);
+                createComponents();
+            }
+        } else {
+            session = new Session(this);
+            filename = null;
+            createComponents();
+        }
     }
 
     /**
