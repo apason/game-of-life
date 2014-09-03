@@ -231,11 +231,14 @@ public class GUI implements Runnable {
      */
     @Override
     public void run() {
+        try{
 
         createWindows();
 
         createComponents();
-
+        }catch (Exception e){
+            System.out.println("GUI kusee");
+        }
     }
 
     /**

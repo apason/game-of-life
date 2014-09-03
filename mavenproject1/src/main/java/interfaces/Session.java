@@ -119,6 +119,7 @@ public class Session implements Runnable {
      */
     @Override
     public void run() {
+        try{
         running = true;
         while (running) {
             for (int i = 0; i < gui.getIterationsPerStep(); i++) {
@@ -130,6 +131,9 @@ public class Session implements Runnable {
                 System.out.println("wait ei toiminut");;
             }
             gui.updateCells();
+        }
+        }catch(Exception e){
+            System.out.println("session kusee");
         }
     }
 
