@@ -231,14 +231,8 @@ public class GUI implements Runnable {
      */
     @Override
     public void run() {
-        try{
-
         createWindows();
-
         createComponents();
-        }catch (Exception e){
-            System.out.println("GUI kusee");
-        }
     }
 
     /**
@@ -1134,6 +1128,11 @@ public class GUI implements Runnable {
         errorwindow.setVisible(true);
     }
     
+    /**
+     * Palauttaa kyseisen ryhmän valitun elementin tekstin
+     * @param buttonGroup Ryhmä jonka valitun alkion teksti palautetaan
+     * @return valitun alkion tekstikenttä
+     */
     private String getSelectedButtonText(ButtonGroup buttonGroup) {
         for (Enumeration<AbstractButton> buttons = buttonGroup.getElements(); buttons.hasMoreElements();) {
             AbstractButton button = buttons.nextElement();
@@ -1145,6 +1144,9 @@ public class GUI implements Runnable {
 
         return null;
     }
+    /**
+     * ActionListenerin toteuttava alaluokka solujen toiminnallisuuta varten
+     */
     private class CellActionListener implements ActionListener {
     
         private int i;

@@ -14,12 +14,8 @@ public class Main {
      * @param args ohjelma ei käsittele sille annettuja argumenttejä
      */
     public static void main(String[] args) {
-        try{
             GUI gui = new GUI();
             SwingUtilities.invokeLater(gui);
-        } catch (Exception e) {
-            System.out.println("exceptioni mainiin!");;
-        }
     }
 
 }

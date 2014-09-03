@@ -1,10 +1,5 @@
 package interfaces;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 import java.io.File;
 import java.util.ArrayList;
 
@@ -71,6 +66,8 @@ public class SessionTest {
         ArrayList<Integer> r3bl = new ArrayList<Integer>();
         ArrayList<Integer> r4dl = new ArrayList<Integer>();
         ArrayList<Integer> r4bl = new ArrayList<Integer>();
+        ArrayList<Integer> r5bl = new ArrayList<Integer>();
+        ArrayList<Integer> r5dl = new ArrayList<Integer>();
 
         int[] r1d = {1, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30};
 
@@ -139,6 +136,26 @@ public class SessionTest {
         }
 
         assertEquals(true, exception);
+        
+       int[] r5d = {1, 4, 5, 6, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30};
+        for (int i : r5d) {
+            r5dl.add(i);
+        }
+        r3bl.add(15);
+    
+        Rules rule5 = new Rules(r5bl, r5dl, 0);
+        
+        exception = false;
+
+        try {
+            session1.addRule(rule5);
+        } catch (Exception e) {
+            exception = true;
+        }
+
+        assertEquals(false, exception);
+        assertTrue(session1.getRules().get(0).getPriority()==0);
+    
     }
 
     @Test
@@ -155,8 +172,6 @@ public class SessionTest {
         assertEquals(0, session1.getRules().size());
 
     }
-
-    //run
     
     @Test
     public void stopWorksProperly() {
@@ -197,12 +212,15 @@ public class SessionTest {
         Rules rule1 = new Rules(bl, dl, 1);
         ArrayList<Rules> rules = new ArrayList<Rules>();
         rules.add(rule1);
+        
         session1.setRules(rules);
         session1.createWorld(3);
-
+        
         assertFalse(session1.equals(null));
+        assertFalse(session1.equals(new Integer(5)));
 
         Session session2 = new Session(null);
+        assertFalse(session1.equals(session2));
         ArrayList<Integer> dl2 = new ArrayList<Integer>();
         ArrayList<Integer> bl2 = new ArrayList<Integer>();
         dl2.add(2);
@@ -221,5 +239,4 @@ public class SessionTest {
         assertFalse(session1.equals(session2));
 
     }
-    
 }

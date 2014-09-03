@@ -1,11 +1,5 @@
 package filehadling;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 import interfaces.Session;
 import java.util.ArrayList;
 import logic.Rules;
@@ -67,18 +61,6 @@ public class SaverTest {
         session.getWorld().getMap()[0][1].setRules(rule1);
         session.getWorld().getMap()[1][1].setRules(rule1);
         session.getWorld().getMap()[2][1].setRules(rule1);
-        
-        for(int i=0;i<5;i++){
-            session.getWorld().printWorld();
-            System.out.println("");
-            session.getWorld().evolve();
-        }
-        
-        for(int i=0;i<5;i++){
-            session.getWorld().printWorld();
-            System.out.println("");
-            session.getWorld().evolve();
-        }
         
     }
     
