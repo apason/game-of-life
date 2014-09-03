@@ -195,11 +195,11 @@ public class SessionTest {
         session1.setRules(rules);
         session1.createWorld(3);
         int hc = session1.hashCode();
-        File file = new File("testi");
+        File file = new File("test.dat");
         file.delete();
-        session1.save("testi");
+        session1.save("test.dat");
         session1 = new Session(null);
-        session1.load("testi");
+        session1.load("test.dat");
         assertEquals(hc, session1.hashCode());
     }
 

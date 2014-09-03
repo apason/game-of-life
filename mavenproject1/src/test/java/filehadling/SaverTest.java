@@ -1,6 +1,7 @@
 package filehadling;
 
 import interfaces.Session;
+import java.io.File;
 import java.util.ArrayList;
 import logic.Rules;
 import org.junit.After;
@@ -71,8 +72,10 @@ public class SaverTest {
     @Test
     public void saveWorksProperly(){
         Session session2=new Session(null);
-        session.save("testipaska");
-        session2.load("testipaska");
+        File file = new File("testsave.dat");
+        file.delete();
+        session.save("testsave.dat");
+        session2.load("testsave.dat");
         assertTrue(session.equals(session2));
     }
     
