@@ -32,7 +32,7 @@ public class Utilities {
      * parsimista varten.
      *
      * @param s Tarkistettava parametrilista
-     * @return True jos lista on oikeassa muodossa ja luvut väliltä [0,99],
+     * @return True jos lista on oikeassa muodossa ja luvut väliltä [0,96],
      * muuten false
      */
     public static boolean correctConditionList(String s) {
