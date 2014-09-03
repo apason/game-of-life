@@ -799,12 +799,20 @@ public class GUI implements Runnable {
         createOptionsComponents();
     }
     
+    /**
+     * next step painikkeen suorittama koodi.
+     * @param evt Kyseinen ActionEvent
+     */
     private void nextstepActionListener(ActionEvent evt){
         session.stop();
         session.getWorld().evolve();
         updateCells();
     }
     
+    /**
+     * start painikkeen suorittama koodi.
+     * @param evt Kyseinen ActionEvent
+     */
     private void startACtionPerformed(ActionEvent evt){
         if(!session.getRunning()){
             Thread thread = new Thread(session);
@@ -812,26 +820,46 @@ public class GUI implements Runnable {
         }
     }
     
+    /**
+     * stop painikkeen suorittama koodi.
+     * @param evt Kyseinen ActionEvent
+     */
     private void stopACtionPerformed(ActionEvent evt){
         session.stop();
     }
      
+    /**
+     * randomize painikkeen suorittama koodi.
+     * @param evt Kyseinen ActionEvent
+     */
     private void randomizeActionPerformed(ActionEvent evt){
         session.stop();
         session.getWorld().randomizeMap();
         updateCells();
     }
     
+    /**
+     * clear painikkeen suorittama koodi.
+     * @param evt Kyseinen ActionEvent
+     */
     private void clearActionPerformed(ActionEvent evt){
         session.getWorld().clear();
         updateCells();
     }
     
+    /**
+     * view priorities painikkeen suorittama koodi.
+     * @param evt kyseinen ActionEvent
+     */
     private void viewprioritiesActionPerformed(ActionEvent evt){
         sp = sp != true;
         updateCells();
     }
     
+    /**
+     * general välilehden save painikkeen suorittama koodi
+     * @param evt kyseinen ActionEvent
+     */
     private void generalsaveActionPerformed(ActionEvent evt){
         if(!Utilities.correctSize(size.getText())){
             size.setText("Error: Size must be integer [2,99]");
@@ -896,7 +924,10 @@ public class GUI implements Runnable {
         color.setBackground(rulescolor);
     }
     
-    
+    /**
+     * rules välilehden add painikkeen suorittama koodi
+     * @param evt kyseinen ActionEvent
+     */
     private void addActionPerformed(ActionEvent evt){
         if(!Utilities.correctConditionList(bl.getText())){
             bl.setText("Syntax error: list conditions (integers) separated with comma.");
@@ -954,6 +985,10 @@ public class GUI implements Runnable {
         }
     }
     
+    /**
+     * rules välilehden edit painikkeen suorittama koodi
+     * @param evt kyseinen ActionEvent
+     */
     private void editActionListener(ActionEvent evt){
         String s = getSelectedButtonText(rulesgroup);
         Rules del = null;
@@ -983,6 +1018,10 @@ public class GUI implements Runnable {
         optionswindow.setVisible(true);
     }
     
+    /**
+     * rules välilehden remove painikkeen suorittama koodi
+     * @param evt kyseinen ActionEvent
+     */
     private void removeActionListener(ActionEvent evt){
         String s = getSelectedButtonText(rulesgroup);
         Rules del = null;
@@ -1006,15 +1045,30 @@ public class GUI implements Runnable {
         optionswindow.setVisible(true);
     }
     
+    /**
+     * general välilehden save painikkeen suorittama koodi
+     * @param ae kyseinen ActionEvent
+     * @param frame ikkuna joka suljetaan
+     */
     private void generalSaveConfirmActionPerformed(ActionEvent ae, JFrame frame){
        session.createWorld(Integer.parseInt(size.getText()));
         frame.setVisible(false);
     }
     
+    /**
+     * general välilehden tallennuksen varmentamisikkunan cancel painikkeen suorittama koodi
+     * @param ae kyseinen ActionEvent
+     * @param frame suljettava ikkuna
+     */
     private void cancelActionPerformed(ActionEvent ae, JFrame frame){
         frame.setVisible(false);
     }
     
+    /**
+     * metodi suljee sille parametrina annetun ikkunan. 
+     * @param ae kyseinen ActionEvent
+     * @param frame suljettava ikkuna
+     */
     private void wcActionPerformed(ActionEvent ae, JFrame frame){
         session.getWorld().removeExtras();
 

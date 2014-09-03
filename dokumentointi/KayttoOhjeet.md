@@ -13,7 +13,7 @@ Pääikkuna
 Sääntöjen määrittämistä (ja tallennusta/lataamista) lukuunottamatta ohjelman suorituksessa on näkyvissä vain tämä ikkuna.
 Ikkunalla on valikkopaneeli josta löytyvät kohdat file, edit, controls ja view.
 file valikosta voidaan aloittaa uusi sessio valitsemalla new. Tämä painike tuhoaa edellisen session (kysyy varmistuksen käyttäjältä) ja aloittaa uuden.
-Session lataus/tallennus tiedostosta/tiedostoon tapahtuu file alikon load- ja save as-painikkeista. 
+Session lataus/tallennus tiedostosta/tiedostoon tapahtuu file valikon load- ja save as-painikkeista. 
 Nämä painikkeet antavat graafisen tiedostoselaimen jolla tiedosto voidaan valita. Annettavan tiedostonimen perään 
 lisätään pääte .dat, jos sitä ei siinä jo ole (katso tarkemmin javadoc).
 Painike save tallentaa session samaan tiedostoon josta se aiemmin ladattiin. Jos sessiota ei ole ladattu, aiemmin,
