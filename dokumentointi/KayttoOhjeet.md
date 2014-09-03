@@ -60,4 +60,4 @@ eteenpäin jokaisen piirtämisen välissä, pelin ollessa päällä (pääikkuna
 ja time per step arvojen muuttaminen ei vaikuta maailman soluihin kuten koon muuttaminen. Save nappula tallentaa muutetut säännöt.
 ok nappula sulkee ikkunan. 
 
-Katso myös ohjelman demovideo! Linkki löytyy tiedostosta demo.md
+Katso myös ohjelman [demovideo](http://youtu.be/hSlo1rd1LWY)! 

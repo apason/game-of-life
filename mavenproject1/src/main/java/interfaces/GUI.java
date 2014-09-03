@@ -1,11 +1,11 @@
 package interfaces;
 
-import actionlisteners.CellActionListener;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.io.File;
@@ -202,22 +202,6 @@ public class GUI implements Runnable {
         return session;
     }
 
-    public JFrame getOptionsWindow() {
-        return optionswindow;
-    }
-
-    public JTextField getBl() {
-        return bl;
-    }
-
-    public JTextField getDl() {
-        return dl;
-    }
-
-    public JTextField getPriority() {
-        return priority;
-    }
-
     public ButtonGroup getRulesGroup() {
         return rulesgroup;
     }
@@ -251,7 +235,7 @@ public class GUI implements Runnable {
         createWindows();
 
         createComponents();
-        
+
     }
 
     /**
@@ -347,13 +331,13 @@ public class GUI implements Runnable {
                         JMenuItem cellitem = new JMenuItem();
                         cellitem.setText("" + r.getPriority());
                         cellitem.setBackground(colormap.get(r.getPriority()));
-                        cellitem.addActionListener(new CellActionListener(this, i, j, r));
+                        cellitem.addActionListener(new CellActionListener(i, j, r));
                         item.add(cellitem);
                     }
                     //kuollut solu
                     JMenuItem cellitem = new JMenuItem();
                     cellitem.setText("Dead");
-                    cellitem.addActionListener(new CellActionListener(this, i, j, null));
+                    cellitem.addActionListener(new CellActionListener(i, j, null));
                     item.add(cellitem);
                     table[i][j].add(item);
                     panel.add(table[i][j]);
@@ -843,6 +827,7 @@ public class GUI implements Runnable {
      * @param evt Kyseinen ActionEvent
      */
     private void clearActionPerformed(ActionEvent evt){
+        session.stop();
         session.getWorld().clear();
         updateCells();
     }
@@ -960,8 +945,8 @@ public class GUI implements Runnable {
            session.addRule(rule);
             colormap.put(prior, color.getBackground());
             createOptionsComponents();
-            getOptionsWindow().pack();
-            getOptionsWindow().setVisible(true);
+            optionswindow.pack();
+            optionswindow.setVisible(true);
         }catch (Exception e){
             final JFrame frame;
             frame = new JFrame("Error");
@@ -1112,13 +1097,13 @@ public class GUI implements Runnable {
                         cellitem.setText("" + r.getPriority());
                         cellitem.setBackground(colormap.get(r.getPriority()));
                         cellitem.removeActionListener(cellitem.getActionListeners()[0]);
-                        cellitem.addActionListener(new CellActionListener(this, i, j, r));
+                        cellitem.addActionListener(new CellActionListener(i, j, r));
                     }
                     //kuollut solu
                     JMenuItem cellitem = item.getItem(session.getRules().size());
                     cellitem.setText("Dead");
                     cellitem.removeActionListener(cellitem.getActionListeners()[0]);
-                    cellitem.addActionListener(new CellActionListener(this, i, j, null));
+                    cellitem.addActionListener(new CellActionListener(i, j, null));
                 }
             }
         }
@@ -1157,5 +1142,25 @@ public class GUI implements Runnable {
 
         return null;
     }
-}
+    private class CellActionListener implements ActionListener {
+    
+        private int i;
+        private int j;
+        private Rules rules;
+    
+        public CellActionListener(int i, int j, Rules rules){
+            this.i=i;
+            this.j=j;
+            this.rules=rules;
+        }
 
+        @Override
+        public void actionPerformed(ActionEvent ae) {
+            if (!session.getRunning()) {
+                session.getWorld().getMap()[i][j].setRules(rules);
+                updateCells();
+
+            }
+        }
+    }
+}

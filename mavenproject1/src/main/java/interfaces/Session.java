@@ -131,7 +131,6 @@ public class Session implements Runnable {
             }
             gui.updateCells();
         }
-
     }
 
     /**
