@@ -24,4 +24,4 @@ TUNTIKIRJANPITO
 * 30.8 n. 90 min käyttöliittymän viimeistelyä
 * 31.8 n. 2h koodikatselmointia ja refaktorointia
 * 1.9  n. 3,5h refaktorointia + view valikko lisätty
-
+* 2.9  n. 3h ohjeet, kuvaus ja rakenne, demovideo, refaktorointi
