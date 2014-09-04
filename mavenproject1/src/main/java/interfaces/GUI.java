@@ -198,14 +198,6 @@ public class GUI implements Runnable {
         this.iterationsperstep = iterationsperstep;
     }
 
-    public Session getSession() {
-        return session;
-    }
-
-    public ButtonGroup getRulesGroup() {
-        return rulesgroup;
-    }
-
     public JFrame getFrame() {
         return frame;
     }
@@ -216,14 +208,6 @@ public class GUI implements Runnable {
 
     public int getIterationsPerStep() {
         return iterationsperstep;
-    }
-
-    public HashMap<Integer, Color> getColorMap() {
-        return colormap;
-    }
-
-    public JButton getColor() {
-        return color;
     }
 
     /**

@@ -43,7 +43,7 @@ public class Utilities {
      * Tarkistaa että prioriteeti on validi.
      * 
      * @param s Tarkistettava prioriteetti
-     * @return True jos String sisältää luvut 0-12
+     * @return True jos String sisältää luvun 0-12
      */
     public static boolean correctPriority(String s){
         return s.matches("[0-9]|10|11|12");

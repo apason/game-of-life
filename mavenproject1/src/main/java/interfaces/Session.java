@@ -127,7 +127,7 @@ public class Session implements Runnable {
             try {
                 TimeUnit.MILLISECONDS.sleep(gui.getTimePerStep());
             } catch (Exception e) {
-                System.out.println("wait ei toiminut");;
+                System.out.println("Error in Session.run:\n " + e.getMessage());;
             }
             gui.updateCells();
         }
