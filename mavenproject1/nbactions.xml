@@ -25,7 +25,8 @@ and open the template in the editor.
             <goal>javadoc:javadoc</goal>
         </goals>
         <properties>
-                <private>true</private>
+                <javadoc.private>true</javadoc.private>
+                
                 
             </properties>
     </action>
