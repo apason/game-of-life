@@ -1,4 +1,8 @@
 game-of-life
 ============
 
-ohha kesä 2014
+Ohjelmoinnin harjoitustyö kesä 2014. Kurssilla toteutettiin vapaavalintainen pienehkö
+java-sovellus. Sovellukseni aiheena soluautomaatti. Ohjelmalla voidaan luoda eri
+tyyppisiä soluja ja antaa niille prioriteettejä sekä syntymä- ja kuolinsääntöjä.
+Klassisen game of lige -pelin voi toteuttaa luomalla solutyypin joka noudattaa
+haluttuja sääntöjä.
